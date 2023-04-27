@@ -1,14 +1,14 @@
 package com.yigitcanyontem.aboutme.model;
 
-public class Movie {
+public class Show {
     String id;
     boolean adult;
     String backdrop_path;
     String original_title;
     String overview;
     String poster_path;
-    String release_date;
-    String language;
+    String first_air_date;
+    String original_language;
     Integer vote_count;
 
     public Integer getVote_count() {
@@ -19,7 +19,7 @@ public class Movie {
         this.vote_count = vote_count;
     }
 
-    public Movie() {
+    public Show() {
     }
 
     public String getId() {
@@ -70,33 +70,19 @@ public class Movie {
         this.poster_path = poster_path;
     }
 
-    public String getRelease_date() {
-        return release_date;
+    public String getFirst_air_date() {
+        return first_air_date;
     }
 
-    public void setRelease_date(String release_date) {
-        this.release_date = release_date;
+    public void setFirst_air_date(String first_air_date) {
+        this.first_air_date = first_air_date;
     }
 
-    public String getLanguage() {
-        return language;
+    public String getOriginal_language() {
+        return original_language;
     }
 
-    public void setLanguage(String language) {
-        this.language = language;
-    }
-
-    @Override
-    public String toString() {
-        return "Movie{" +
-                "adult=" + adult +
-                ", backdrop_path='" + backdrop_path + '\'' +
-                ", original_title='" + original_title + '\'' +
-                ", overview='" + overview + '\'' +
-                ", poster_path='" + poster_path + '\'' +
-                ", release_date='" + release_date + '\'' +
-                ", language='" + language + '\'' +
-                '}';
+    public void setOriginal_language(String original_language) {
+        this.original_language = original_language;
     }
 }
-
