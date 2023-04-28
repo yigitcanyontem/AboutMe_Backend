@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.yigitcanyontem.aboutme.entities.Country;
 import com.yigitcanyontem.aboutme.entities.UserModel;
 import com.yigitcanyontem.aboutme.entities.Users;
+import com.yigitcanyontem.aboutme.model.Book;
 import com.yigitcanyontem.aboutme.model.Language;
 import com.yigitcanyontem.aboutme.model.Movie;
 import com.yigitcanyontem.aboutme.model.Show;
@@ -28,7 +29,7 @@ public class MovieRestController {
     @Autowired
     CountryService countryService;
 
-
+    /////////////////////SHOWS////////////////////////
     @GetMapping("/tv/{showid}")
     public Show getSingleShowById(@PathVariable Integer showid) throws JsonProcessingException {
         String url = "https://api.themoviedb.org/3/tv/"+showid+"?api_key="+api_key;
@@ -53,7 +54,6 @@ public class MovieRestController {
         show.setVote_count(list.findValue("vote_count").asInt());
         return show;
     }
-    //Return Movies Based on Parameters
     @GetMapping("/search/tv/{title}/{year}")
     public List<Show> getShowSearchResults(@PathVariable String title, @PathVariable String year) throws JsonProcessingException {
         String url = "https://api.themoviedb.org/3/search/tv?api_key="+api_key+"&query="+title+"&first_air_date_year="+year;
@@ -103,6 +103,9 @@ public class MovieRestController {
         shows.sort(Comparator.comparing(Show::getVote_count).reversed());
         return shows;
     }
+
+
+    /////////////////////MOVIES////////////////////////
     @GetMapping("/movie/{movieid}")
     public Movie getSingleMovieById(@PathVariable Integer movieid) throws JsonProcessingException {
         String url = "https://api.themoviedb.org/3/movie/"+movieid+"?api_key="+api_key;
@@ -127,7 +130,6 @@ public class MovieRestController {
         movie.setVote_count(list.findValue("vote_count").asInt());
         return movie;
     }
-    //Return Movies Based on Parameters
     @GetMapping("/search/movie/{title}/{year}")
     public List<Movie> getMovieSearchResults(@PathVariable String title, @PathVariable String year) throws JsonProcessingException {
         String url = "https://api.themoviedb.org/3/search/movie?api_key="+api_key+"&query="+title+"&primary_release_year="+year;
@@ -176,13 +178,67 @@ public class MovieRestController {
         movies.sort(Comparator.comparing(Movie::getVote_count).reversed());
         return movies;
     }
-    //Return All Countries
+
+
+
+    /////////////////////BOOKS////////////////////////
+    @GetMapping("/search/book/{title}")
+    public List<Book> getBookSearchResults(@PathVariable String title) throws JsonProcessingException {
+        String url = "https://www.googleapis.com/books/v1/volumes?q="+title;
+        RestTemplate restTemplate = new RestTemplate();
+        String json = restTemplate.getForObject(url,String.class);
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode list = objectMapper.readTree(json).findValue("items");
+        System.out.println(list);
+        List<Book> books = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++){
+            Book book = new Book();
+            book.setId(list.get(i).findValue("id").asText());
+            book.setTitle(list.get(i).findValue("title").asText());
+            book.setAuthors(list.get(i).findValue("authors").get(0).asText());
+            try {
+                book.setDescription(list.get(i).findValue("description").asText());
+            }catch (Exception e){
+                continue;
+            }
+            try {
+                book.setPageCount(list.get(i).findValue("pageCount").asInt());
+            }catch (Exception e){
+                book.setPageCount(0);
+            }
+
+            book.setCover_url("https://books.google.com/books/publisher/content/images/frontcover/"+book.getId()+"?fife=w400-h600");
+            books.add(book);
+        }
+        return books;
+    }
+    @GetMapping("/book/{bookid}")
+    public Book getSingleBookById(@PathVariable String bookid) throws JsonProcessingException {
+        String url = "https://www.googleapis.com/books/v1/volumes/"+bookid;
+        RestTemplate restTemplate = new RestTemplate();
+        String json = restTemplate.getForObject(url,String.class);
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode list = objectMapper.readTree(json);
+
+        Book book = new Book();
+        book.setId(list.findValue("id").asText());
+        book.setTitle(list.findValue("title").asText());
+        book.setAuthors(list.findValue("authors").get(0).asText());
+        book.setDescription(list.findValue("description").asText());
+        book.setPageCount(list.findValue("pageCount").asInt());
+        book.setCover_url("https://books.google.com/books/publisher/content/images/frontcover/"+book.getId()+"?fife=w400-h600");
+        return book;
+    }
+
+
+
+    /////////////////////COUNTRIES////////////////////////
     @GetMapping("/countries")
     public List<Country> getCountries(){
         return countryService.allCountries();
     }
-    //Create New User
-    @PostMapping("/user")
+    /////////////////////USERS////////////////////////
+    @PostMapping("/user/create")
     public Users newCustomer(@RequestBody UserModel user){
         Users users = new Users();
         users.setId(usersService.max()+1);
@@ -195,10 +251,9 @@ public class MovieRestController {
 
         return usersService.addUser(users);
     }
-
-/*
+    /////////////////////Languages////////////////////////
     @GetMapping("/languages")
-    public List<Language> getSearchResults() throws JsonProcessingException {
+    public List<Language> getSearchResults(){
         String url = "https://api.themoviedb.org/3/configuration/languages?api_key="+api_key;
         RestTemplate restTemplate = new RestTemplate();
         JsonNode list = restTemplate.getForObject(url, JsonNode.class);
@@ -213,5 +268,5 @@ public class MovieRestController {
         languages.sort(Comparator.comparing(Language::getEnglish_name));
         return languages;
     }
- */
+
 }
