@@ -9,8 +9,16 @@ public class Movie {
     String poster_path;
     String release_date;
     String language;
+    String imdb_url;
     Integer vote_count;
 
+    public String getImdb_url() {
+        return imdb_url;
+    }
+
+    public void setImdb_url(String imdb_url) {
+        this.imdb_url = imdb_url;
+    }
     public Integer getVote_count() {
         return vote_count;
     }

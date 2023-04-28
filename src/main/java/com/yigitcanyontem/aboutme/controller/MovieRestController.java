@@ -5,10 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.yigitcanyontem.aboutme.entities.Country;
 import com.yigitcanyontem.aboutme.entities.UserModel;
 import com.yigitcanyontem.aboutme.entities.Users;
-import com.yigitcanyontem.aboutme.model.Book;
-import com.yigitcanyontem.aboutme.model.Language;
-import com.yigitcanyontem.aboutme.model.Movie;
-import com.yigitcanyontem.aboutme.model.Show;
+import com.yigitcanyontem.aboutme.model.*;
 import com.yigitcanyontem.aboutme.service.CountryService;
 import com.yigitcanyontem.aboutme.service.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +19,10 @@ import java.util.*;
 @RestController
 @CrossOrigin("http://localhost:3000")
 public class MovieRestController {
-    @Value("${api_key}")
-    String api_key;
+    @Value("${tmdb_api_key}")
+    String tmdb_api_key;
+    @Value("${last_fm_api_key}")
+    String last_fm_api_key;
     @Autowired
     UsersService usersService;
     @Autowired
@@ -32,7 +31,7 @@ public class MovieRestController {
     /////////////////////SHOWS////////////////////////
     @GetMapping("/tv/{showid}")
     public Show getSingleShowById(@PathVariable Integer showid) throws JsonProcessingException {
-        String url = "https://api.themoviedb.org/3/tv/"+showid+"?api_key="+api_key;
+        String url = "https://api.themoviedb.org/3/tv/"+showid+"?api_key="+ tmdb_api_key;
         RestTemplate restTemplate = new RestTemplate();
         String json = restTemplate.getForObject(url,String.class);
         ObjectMapper objectMapper = new ObjectMapper();
@@ -51,12 +50,13 @@ public class MovieRestController {
         show.setPoster_path("https://image.tmdb.org/t/p/w500"+list.findValue("poster_path").asText());
         show.setFirst_air_date(list.findValue("first_air_date").asText());
         show.setOriginal_language(list.findValue("original_language").asText());
+        show.setImdb_url("https://www.imdb.com/title/"+list.findValue("imdb_id").asText());
         show.setVote_count(list.findValue("vote_count").asInt());
         return show;
     }
     @GetMapping("/search/tv/{title}/{year}")
     public List<Show> getShowSearchResults(@PathVariable String title, @PathVariable String year) throws JsonProcessingException {
-        String url = "https://api.themoviedb.org/3/search/tv?api_key="+api_key+"&query="+title+"&first_air_date_year="+year;
+        String url = "https://api.themoviedb.org/3/search/tv?api_key="+ tmdb_api_key +"&query="+title+"&first_air_date_year="+year;
         RestTemplate restTemplate = new RestTemplate();
         String json = restTemplate.getForObject(url,String.class);
         ObjectMapper objectMapper = new ObjectMapper();
@@ -64,7 +64,6 @@ public class MovieRestController {
         List<Show> shows = new ArrayList<>();
         for (int i = 0; i < list.size(); i++){
             Show show = new Show();
-
             show.setId(list.get(i).get("id").asText());
             show.setAdult(list.get(i).get("adult").asBoolean());
             show.setBackdrop_path("https://image.tmdb.org/t/p/w500"+list.get(i).get("backdrop_path").asText());
@@ -73,6 +72,7 @@ public class MovieRestController {
             show.setPoster_path("https://image.tmdb.org/t/p/w500"+list.get(i).get("poster_path").asText());
             show.setFirst_air_date(list.get(i).get("first_air_date").asText());
             show.setOriginal_language(list.get(i).get("original_language").asText());
+            show.setImdb_url("");
             show.setVote_count(list.get(i).get("vote_count").asInt());
             shows.add(show);
         }
@@ -81,7 +81,7 @@ public class MovieRestController {
     }
     @GetMapping("/search/tv/{title}")
     public List<Show> getShowSearchResults(@PathVariable String title) throws JsonProcessingException {
-        String url = "https://api.themoviedb.org/3/search/tv?api_key="+api_key+"&query="+title;
+        String url = "https://api.themoviedb.org/3/search/tv?api_key="+ tmdb_api_key +"&query="+title;
         RestTemplate restTemplate = new RestTemplate();
         String json = restTemplate.getForObject(url,String.class);
         ObjectMapper objectMapper = new ObjectMapper();
@@ -97,6 +97,7 @@ public class MovieRestController {
             show.setPoster_path("https://image.tmdb.org/t/p/w500"+list.get(i).get("poster_path").asText());
             show.setFirst_air_date(list.get(i).get("first_air_date").asText());
             show.setOriginal_language(list.get(i).get("original_language").asText());
+            show.setImdb_url("");
             show.setVote_count(list.get(i).get("vote_count").asInt());
             shows.add(show);
         }
@@ -108,7 +109,7 @@ public class MovieRestController {
     /////////////////////MOVIES////////////////////////
     @GetMapping("/movie/{movieid}")
     public Movie getSingleMovieById(@PathVariable Integer movieid) throws JsonProcessingException {
-        String url = "https://api.themoviedb.org/3/movie/"+movieid+"?api_key="+api_key;
+        String url = "https://api.themoviedb.org/3/movie/"+movieid+"?api_key="+ tmdb_api_key;
         RestTemplate restTemplate = new RestTemplate();
         String json = restTemplate.getForObject(url,String.class);
         ObjectMapper objectMapper = new ObjectMapper();
@@ -127,12 +128,13 @@ public class MovieRestController {
         movie.setPoster_path("https://image.tmdb.org/t/p/w500"+list.findValue("poster_path").asText());
         movie.setRelease_date(list.findValue("release_date").asText());
         movie.setLanguage(list.findValue("original_language").asText());
+        movie.setImdb_url("https://www.imdb.com/title/"+list.findValue("imdb_id").asText());
         movie.setVote_count(list.findValue("vote_count").asInt());
         return movie;
     }
     @GetMapping("/search/movie/{title}/{year}")
     public List<Movie> getMovieSearchResults(@PathVariable String title, @PathVariable String year) throws JsonProcessingException {
-        String url = "https://api.themoviedb.org/3/search/movie?api_key="+api_key+"&query="+title+"&primary_release_year="+year;
+        String url = "https://api.themoviedb.org/3/search/movie?api_key="+ tmdb_api_key +"&query="+title+"&primary_release_year="+year;
         RestTemplate restTemplate = new RestTemplate();
         String json = restTemplate.getForObject(url,String.class);
         ObjectMapper objectMapper = new ObjectMapper();
@@ -148,6 +150,7 @@ public class MovieRestController {
             movie.setPoster_path("https://image.tmdb.org/t/p/w500"+list.get(i).get("poster_path").asText());
             movie.setRelease_date(list.get(i).get("release_date").asText());
             movie.setLanguage(list.get(i).get("original_language").asText());
+            movie.setImdb_url("");
             movie.setVote_count(list.get(i).get("vote_count").asInt());
             movies.add(movie);
         }
@@ -156,7 +159,7 @@ public class MovieRestController {
     }
     @GetMapping("/search/movie/{title}")
     public List<Movie> getMovieSearchResults(@PathVariable String title) throws JsonProcessingException {
-        String url = "https://api.themoviedb.org/3/search/movie?api_key="+api_key+"&query="+title;
+        String url = "https://api.themoviedb.org/3/search/movie?api_key="+ tmdb_api_key +"&query="+title;
         RestTemplate restTemplate = new RestTemplate();
         String json = restTemplate.getForObject(url,String.class);
         ObjectMapper objectMapper = new ObjectMapper();
@@ -172,6 +175,7 @@ public class MovieRestController {
             movie.setPoster_path("https://image.tmdb.org/t/p/w500"+list.get(i).get("poster_path").asText());
             movie.setRelease_date(list.get(i).get("release_date").asText());
             movie.setLanguage(list.get(i).get("original_language").asText());
+            movie.setImdb_url("");
             movie.setVote_count(list.get(i).get("vote_count").asInt());
             movies.add(movie);
         }
@@ -189,26 +193,28 @@ public class MovieRestController {
         String json = restTemplate.getForObject(url,String.class);
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode list = objectMapper.readTree(json).findValue("items");
-        System.out.println(list);
         List<Book> books = new ArrayList<>();
-        for (int i = 0; i < list.size(); i++){
-            Book book = new Book();
-            book.setId(list.get(i).findValue("id").asText());
-            book.setTitle(list.get(i).findValue("title").asText());
-            book.setAuthors(list.get(i).findValue("authors").get(0).asText());
-            try {
-                book.setDescription(list.get(i).findValue("description").asText());
-            }catch (Exception e){
-                continue;
-            }
-            try {
-                book.setPageCount(list.get(i).findValue("pageCount").asInt());
-            }catch (Exception e){
-                book.setPageCount(0);
-            }
+        if (list != null){
+            for (int i = 0; i < list.size(); i++){
+                Book book = new Book();
 
-            book.setCover_url("https://books.google.com/books/publisher/content/images/frontcover/"+book.getId()+"?fife=w400-h600");
-            books.add(book);
+                try {
+                    book.setId(list.get(i).findValue("id").asText());
+                    book.setTitle(list.get(i).findValue("title").asText());
+                    book.setAuthors(list.get(i).findValue("authors").get(0).asText());
+                    book.setDescription(list.get(i).findValue("description").asText());
+                }catch (Exception e){
+                    continue;
+                }
+                try {
+                    book.setPageCount(list.get(i).findValue("pageCount").asInt());
+                }catch (Exception e){
+                    book.setPageCount(0);
+                }
+
+                book.setCover_url("https://books.google.com/books/publisher/content/images/frontcover/"+book.getId()+"?fife=w400-h600");
+                books.add(book);
+            }
         }
         return books;
     }
@@ -219,6 +225,7 @@ public class MovieRestController {
         String json = restTemplate.getForObject(url,String.class);
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode list = objectMapper.readTree(json);
+
 
         Book book = new Book();
         book.setId(list.findValue("id").asText());
@@ -231,12 +238,57 @@ public class MovieRestController {
     }
 
 
+    /////////////////////ALBUMS////////////////////////
+    @GetMapping("/search/album/{title}")
+    public List<Album> getAlbumSearchResults(@PathVariable String title) throws JsonProcessingException {
+        String url = "http://ws.audioscrobbler.com/2.0/?method=album.search&album="+title+"&api_key="+last_fm_api_key+"&format=json";
+        RestTemplate restTemplate = new RestTemplate();
+        String json = restTemplate.getForObject(url,String.class);
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode list = objectMapper.readTree(json).findValue("album");
+
+        List<Album> albums = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            Album album = new Album();
+            JsonNode images = list.get(i).findValue("image");
+            album.setMbid(list.get(i).findValue("mbid").asText());
+            album.setName(list.get(i).findValue("name").asText());
+            album.setArtist(list.get(i).findValue("artist").asText());
+            album.setUrl(list.get(i).findValue("url").asText());
+            album.setImage(images.get(3).findValue("#text").asText());
+            albums.add(album);
+        }
+        return albums;
+    }
+    @GetMapping("/album/{mbid}")
+    public Album getSingleAlbumById(@PathVariable String mbid) throws JsonProcessingException {
+        String url = "https://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key="+last_fm_api_key+"&mbid="+mbid+"&format=json";
+        RestTemplate restTemplate = new RestTemplate();
+        String json = restTemplate.getForObject(url,String.class);
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode list = objectMapper.readTree(json).findValue("album");
+
+        assert json != null;
+        String temp = Arrays.toString(json.split("\""));
+        String s = temp.substring(temp.indexOf("tag"),temp.indexOf("image"));
+        s = s.substring(s.lastIndexOf("name"));
+        s = s.replaceAll("[^a-zA-Z\\s]", "");
+        Album album = new Album();
+        JsonNode images = list.findValue("image");
+        album.setMbid(mbid);
+        album.setName(s.substring(s.indexOf("name")+4).trim());
+        album.setArtist(list.findValue("artist").asText());
+        album.setUrl("https://www.last.fm/music/"+album.getArtist()+"/"+album.getName());
+        album.setImage(images.get(3).findValue("#text").asText());
+        return album;
+    }
 
     /////////////////////COUNTRIES////////////////////////
     @GetMapping("/countries")
     public List<Country> getCountries(){
         return countryService.allCountries();
     }
+
     /////////////////////USERS////////////////////////
     @PostMapping("/user/create")
     public Users newCustomer(@RequestBody UserModel user){
@@ -251,10 +303,11 @@ public class MovieRestController {
 
         return usersService.addUser(users);
     }
+
     /////////////////////Languages////////////////////////
     @GetMapping("/languages")
     public List<Language> getSearchResults(){
-        String url = "https://api.themoviedb.org/3/configuration/languages?api_key="+api_key;
+        String url = "https://api.themoviedb.org/3/configuration/languages?api_key="+ tmdb_api_key;
         RestTemplate restTemplate = new RestTemplate();
         JsonNode list = restTemplate.getForObject(url, JsonNode.class);
         List<Language> languages = new ArrayList<>();

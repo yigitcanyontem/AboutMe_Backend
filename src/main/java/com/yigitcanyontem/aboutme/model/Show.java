@@ -9,6 +9,7 @@ public class Show {
     String poster_path;
     String first_air_date;
     String original_language;
+    String imdb_url;
     Integer vote_count;
 
     public Integer getVote_count() {
@@ -20,6 +21,14 @@ public class Show {
     }
 
     public Show() {
+    }
+
+    public String getImdb_url() {
+        return imdb_url;
+    }
+
+    public void setImdb_url(String imdb_url) {
+        this.imdb_url = imdb_url;
     }
 
     public String getId() {
