@@ -11,11 +11,12 @@ import java.util.Optional;
 public class UsersService {
     @Autowired
     UsersRepository usersRepository;
-
+    public Users getUser(Integer id){
+        return usersRepository.findById(id).orElseThrow();
+    }
     public Optional<Users> singleUser(Integer id){
         return usersRepository.findById(id);
     }
-
     public Users addUser(Users user){
         return usersRepository.save(user);
     }

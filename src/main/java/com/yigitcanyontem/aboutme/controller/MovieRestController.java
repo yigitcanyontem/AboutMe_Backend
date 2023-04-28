@@ -6,8 +6,7 @@ import com.yigitcanyontem.aboutme.entities.Country;
 import com.yigitcanyontem.aboutme.entities.UserModel;
 import com.yigitcanyontem.aboutme.entities.Users;
 import com.yigitcanyontem.aboutme.model.*;
-import com.yigitcanyontem.aboutme.service.CountryService;
-import com.yigitcanyontem.aboutme.service.UsersService;
+import com.yigitcanyontem.aboutme.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +26,14 @@ public class MovieRestController {
     UsersService usersService;
     @Autowired
     CountryService countryService;
+    @Autowired
+    FavMovieService favMovieService;
+    @Autowired
+    FavAlbumsService favAlbumsService;
+    @Autowired
+    FavShowsService favShowsService;
+    @Autowired
+    FavBooksService favBooksService;
 
     /////////////////////SHOWS////////////////////////
     @GetMapping("/tv/{showid}")
@@ -184,7 +191,6 @@ public class MovieRestController {
     }
 
 
-
     /////////////////////BOOKS////////////////////////
     @GetMapping("/search/book/{title}")
     public List<Book> getBookSearchResults(@PathVariable String title) throws JsonProcessingException {
@@ -283,11 +289,13 @@ public class MovieRestController {
         return album;
     }
 
+
     /////////////////////COUNTRIES////////////////////////
     @GetMapping("/countries")
     public List<Country> getCountries(){
         return countryService.allCountries();
     }
+
 
     /////////////////////USERS////////////////////////
     @PostMapping("/user/create")
@@ -303,10 +311,42 @@ public class MovieRestController {
 
         return usersService.addUser(users);
     }
+    @GetMapping("/user/{id}")
+    public Users newCustomer(@PathVariable Integer id){
+        return usersService.getUser(id);
+    }
+
+
+    /////////////////////FavMovies////////////////////////
+    @GetMapping("/user/favmovie/{id}")
+    public List<Integer> getFavMovies(@PathVariable Integer id){
+        return favMovieService.findByUserId(id);
+    }
+
+
+    /////////////////////FavShows////////////////////////
+    @GetMapping("/user/favshows/{id}")
+    public List<Integer> getFavShows(@PathVariable Integer id){
+        return favShowsService.findByUserId(id);
+    }
+
+
+    /////////////////////FavAlbums////////////////////////
+    @GetMapping("/user/favalbums/{id}")
+    public List<String> getFavAlbums(@PathVariable Integer id){
+        return favAlbumsService.findByUserId(id);
+    }
+
+
+    /////////////////////FavBooks////////////////////////
+    @GetMapping("/user/favbooks/{id}")
+    public List<String> getFavBooks(@PathVariable Integer id){
+        return favBooksService.findByUserId(id);
+    }
 
     /////////////////////Languages////////////////////////
     @GetMapping("/languages")
-    public List<Language> getSearchResults(){
+    public List<Language> getMovieLanguages(){
         String url = "https://api.themoviedb.org/3/configuration/languages?api_key="+ tmdb_api_key;
         RestTemplate restTemplate = new RestTemplate();
         JsonNode list = restTemplate.getForObject(url, JsonNode.class);
