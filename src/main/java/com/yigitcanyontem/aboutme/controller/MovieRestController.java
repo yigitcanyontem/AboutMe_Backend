@@ -3,6 +3,7 @@ package com.yigitcanyontem.aboutme.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.yigitcanyontem.aboutme.entities.Country;
+import com.yigitcanyontem.aboutme.entities.SocialMedia;
 import com.yigitcanyontem.aboutme.entities.UserModel;
 import com.yigitcanyontem.aboutme.entities.Users;
 import com.yigitcanyontem.aboutme.model.*;
@@ -34,6 +35,15 @@ public class MovieRestController {
     FavShowsService favShowsService;
     @Autowired
     FavBooksService favBooksService;
+    @Autowired
+    TwitterService twitterService;
+    @Autowired
+    InstagramService instagramService;
+    @Autowired
+    LinkedinService linkedinService;
+    @Autowired
+    PinterestService pinterestService;
+
 
     /////////////////////SHOWS////////////////////////
     @GetMapping("/tv/{showid}")
@@ -57,7 +67,11 @@ public class MovieRestController {
         show.setPoster_path("https://image.tmdb.org/t/p/w500"+list.findValue("poster_path").asText());
         show.setFirst_air_date(list.findValue("first_air_date").asText());
         show.setOriginal_language(list.findValue("original_language").asText());
-        show.setImdb_url("https://www.imdb.com/title/"+list.findValue("imdb_id").asText());
+        try {
+            show.setImdb_url(list.findValue("homepage").asText());
+        }catch (Exception e){
+            show.setImdb_url("");
+        }
         show.setVote_count(list.findValue("vote_count").asInt());
         return show;
     }
@@ -126,13 +140,15 @@ public class MovieRestController {
         String temp = Arrays.toString(json.split("\""));
         String s = temp.substring(temp.indexOf("homepage"),temp.indexOf("imdb_id"));
 
+        String s1 = temp.substring(temp.indexOf("popularity"),temp.indexOf("production_companies"));
+        s1 = s1.substring(s1.indexOf("poster_path")+14).replaceAll(",","");
         Movie movie = new Movie();
         movie.setId(s.replaceAll("[^0-9]", ""));
         movie.setAdult(list.findValue("adult").asBoolean());
         movie.setBackdrop_path("https://image.tmdb.org/t/p/w500"+list.findValue("backdrop_path").asText());
         movie.setOriginal_title(list.findValue("original_title").asText());
         movie.setOverview(list.findValue("overview").asText());
-        movie.setPoster_path("https://image.tmdb.org/t/p/w500"+list.findValue("poster_path").asText());
+        movie.setPoster_path("https://image.tmdb.org/t/p/w500" + s1.trim());
         movie.setRelease_date(list.findValue("release_date").asText());
         movie.setLanguage(list.findValue("original_language").asText());
         movie.setImdb_url("https://www.imdb.com/title/"+list.findValue("imdb_id").asText());
@@ -240,6 +256,7 @@ public class MovieRestController {
         book.setDescription(list.findValue("description").asText());
         book.setPageCount(list.findValue("pageCount").asInt());
         book.setCover_url("https://books.google.com/books/publisher/content/images/frontcover/"+book.getId()+"?fife=w400-h600");
+        book.setWebReaderLink(list.findValue("webReaderLink").asText());
         return book;
     }
 
@@ -312,22 +329,42 @@ public class MovieRestController {
         return usersService.addUser(users);
     }
     @GetMapping("/user/{id}")
-    public Users newCustomer(@PathVariable Integer id){
-        return usersService.getUser(id);
+    public List<Users> getCustomer(@PathVariable Integer id){
+        return List.of(usersService.getUser(id));
     }
 
+    @GetMapping("/user/socialmedia/{id}")
+    public SocialMedia getCustomerSocialMedia(@PathVariable Integer id){
+        SocialMedia socialMedia = new SocialMedia();
+
+        socialMedia.setTwitteruser(twitterService.getTwitter(id).getTwitteruser());
+        socialMedia.setInstagramuser(instagramService.getInstagram(id).getInstagramuser());
+        socialMedia.setLinkedinuser(linkedinService.getLinkedin(id).getLinkedinuser());
+        socialMedia.setPinterestuser(pinterestService.getPinterest(id).getPinterestuser());
+
+        return socialMedia;
+    }
 
     /////////////////////FavMovies////////////////////////
     @GetMapping("/user/favmovie/{id}")
-    public List<Integer> getFavMovies(@PathVariable Integer id){
-        return favMovieService.findByUserId(id);
+    public List<Movie> getFavMovies(@PathVariable Integer id) throws JsonProcessingException {
+        List<Integer> movieids = favMovieService.findByUserId(id);
+        List<Movie> movies = new ArrayList<>();
+        for (Integer x:movieids){
+            movies.add(getSingleMovieById(x));
+        }
+        return movies;
     }
-
 
     /////////////////////FavShows////////////////////////
     @GetMapping("/user/favshows/{id}")
-    public List<Integer> getFavShows(@PathVariable Integer id){
-        return favShowsService.findByUserId(id);
+    public List<Show> getFavShows(@PathVariable Integer id) throws JsonProcessingException {
+        List<Integer> showids = favShowsService.findByUserId(id);
+        List<Show> shows = new ArrayList<>();
+        for (Integer x:showids){
+            shows.add(getSingleShowById(x));
+        }
+        return shows;
     }
 
 
@@ -340,8 +377,13 @@ public class MovieRestController {
 
     /////////////////////FavBooks////////////////////////
     @GetMapping("/user/favbooks/{id}")
-    public List<String> getFavBooks(@PathVariable Integer id){
-        return favBooksService.findByUserId(id);
+    public List<Book> getFavBooks(@PathVariable Integer id) throws JsonProcessingException {
+        List<String> bookids = favBooksService.findByUserId(id);
+        List<Book> books = new ArrayList<>();
+        for (String x:bookids){
+            books.add(getSingleBookById(x));
+        }
+        return books;
     }
 
     /////////////////////Languages////////////////////////

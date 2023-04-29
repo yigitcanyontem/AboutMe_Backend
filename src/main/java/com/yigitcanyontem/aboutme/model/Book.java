@@ -7,6 +7,15 @@ public class Book {
     String description;
     Integer pageCount;
     String cover_url;
+    String webReaderLink;
+
+    public String getWebReaderLink() {
+        return webReaderLink;
+    }
+
+    public void setWebReaderLink(String webReaderLink) {
+        this.webReaderLink = webReaderLink;
+    }
 
     public String getId() {
         return id;
