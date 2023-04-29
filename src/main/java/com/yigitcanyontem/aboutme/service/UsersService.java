@@ -5,6 +5,7 @@ import com.yigitcanyontem.aboutme.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -22,5 +23,9 @@ public class UsersService {
     }
     public Integer max(){
         return usersRepository.maxUsersId();
+    }
+
+    public List<Users> usersList(String username){
+        return usersRepository.findByUsernameContaining(username);
     }
 }
