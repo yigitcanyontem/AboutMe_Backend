@@ -12,5 +12,8 @@ public interface UsersRepository extends JpaRepository<Users,Integer> {
     @Query("SELECT max(a.id) FROM Users a")
     int maxUsersId();
 
+
+    Users getUsersByUsername(String username);
+
      List<Users> findByUsernameContaining(String username);
 }

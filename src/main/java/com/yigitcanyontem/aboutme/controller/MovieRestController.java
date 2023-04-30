@@ -2,10 +2,7 @@ package com.yigitcanyontem.aboutme.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.yigitcanyontem.aboutme.entities.Country;
-import com.yigitcanyontem.aboutme.entities.SocialMedia;
-import com.yigitcanyontem.aboutme.entities.UserModel;
-import com.yigitcanyontem.aboutme.entities.Users;
+import com.yigitcanyontem.aboutme.entities.*;
 import com.yigitcanyontem.aboutme.model.*;
 import com.yigitcanyontem.aboutme.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +40,8 @@ public class MovieRestController {
     LinkedinService linkedinService;
     @Autowired
     PinterestService pinterestService;
+    @Autowired
+    DescriptionService descriptionService;
 
 
     /////////////////////SHOWS////////////////////////
@@ -143,7 +142,6 @@ public class MovieRestController {
         List<Movie> movies = new ArrayList<>();
         for (int i = 0; i < list.size(); i++){
             Movie movie = new Movie();
-            System.out.println(list.get(i).get("poster_path") );
             if(list.get(i).get("poster_path").asText().equals("null")){
                 continue;
             }
@@ -285,11 +283,11 @@ public class MovieRestController {
 
         return usersService.addUser(users);
     }
-    @GetMapping("/user/{id}")
-    public List<Users> getCustomer(@PathVariable Integer id){
-        return List.of(usersService.getUser(id));
-    }
 
+    @GetMapping("/user/{id}")
+    public Users getCustomer(@PathVariable Integer id){
+        return usersService.getUser(id);
+    }
     @GetMapping("/user/socialmedia/{id}")
     public SocialMedia getCustomerSocialMedia(@PathVariable Integer id){
         SocialMedia socialMedia = new SocialMedia();
@@ -301,11 +299,53 @@ public class MovieRestController {
 
         return socialMedia;
     }
-
-
+    @GetMapping("/user/description/{id}")
+    public Description getCustomerDescription(@PathVariable Integer id){
+        return descriptionService.description(id);
+    }
     @GetMapping("/search/user/{username}")
     public List<Users> getUserSearchResults(@PathVariable String username) {
         return usersService.usersList(username);
+    }
+    @GetMapping("/user/all/{id}")
+    public UserOneModel getUserAll(@PathVariable Integer id) throws JsonProcessingException {
+        UserOneModel userOneModel = new UserOneModel();
+        userOneModel.setUsers(usersService.getUser(id));
+        userOneModel.setSocialMedia(getCustomerSocialMedia(id));
+        userOneModel.setDescription(descriptionService.description(id));
+        userOneModel.setFavmovies(getFavMovies(id));
+        userOneModel.setFavshows(getFavShows(id));
+        userOneModel.setFavalbums(getFavAlbums(id));
+        userOneModel.setFavbooks(getFavBooks(id));
+        return userOneModel;
+    }
+
+
+    @PutMapping("/user/update")
+    public String updateCustomer(@RequestBody AssignModel assignModel) {
+        System.out.println(assignModel);
+        int id = usersService.getUserByUsername(assignModel.getUsername());
+        String description = assignModel.getDescription();
+        String instagramuser = assignModel.getInstagramuser();
+        String pinterestuser = assignModel.getPinterestuser();
+        String linkedinuser = assignModel.getPinterestuser();
+        String twitteruser = assignModel.getTwitteruser();
+        if (!Objects.equals(description, "")){
+            descriptionService.saveDescription(id,assignModel.getDescription());
+        }
+        if (!Objects.equals(instagramuser, "")){
+            instagramService.saveInstagram(id,assignModel.getInstagramuser());
+        }
+        if (!Objects.equals(pinterestuser, "")){
+            pinterestService.savePinterest(id,assignModel.getPinterestuser());
+        }
+        if (!Objects.equals(linkedinuser, "")){
+            linkedinService.saveLinkedin(id,assignModel.getLinkedinuser());
+        }
+        if (!Objects.equals(twitteruser, "")){
+            twitterService.saveTwitter(id,assignModel.getLinkedinuser());
+        }
+        return "Success";
     }
 
     /////////////////////FavMovies////////////////////////
@@ -318,7 +358,6 @@ public class MovieRestController {
         }
         return movies;
     }
-
     /////////////////////FavShows////////////////////////
     @GetMapping("/user/favshows/{id}")
     public List<Show> getFavShows(@PathVariable Integer id) throws JsonProcessingException {
@@ -329,15 +368,11 @@ public class MovieRestController {
         }
         return shows;
     }
-
-
     /////////////////////FavAlbums////////////////////////
     @GetMapping("/user/favalbums/{id}")
     public List<String> getFavAlbums(@PathVariable Integer id){
         return favAlbumsService.findByUserId(id);
     }
-
-
     /////////////////////FavBooks////////////////////////
     @GetMapping("/user/favbooks/{id}")
     public List<Book> getFavBooks(@PathVariable Integer id) throws JsonProcessingException {
@@ -348,6 +383,7 @@ public class MovieRestController {
         }
         return books;
     }
+
 
     /////////////////////Languages////////////////////////
     @GetMapping("/languages")

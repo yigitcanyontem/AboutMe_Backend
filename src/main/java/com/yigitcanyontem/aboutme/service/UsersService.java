@@ -24,7 +24,9 @@ public class UsersService {
     public Integer max(){
         return usersRepository.maxUsersId();
     }
-
+    public Integer getUserByUsername(String username){
+        return usersRepository.getUsersByUsername(username).getId();
+    }
     public List<Users> usersList(String username){
         return usersRepository.findByUsernameContaining(username);
     }

@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface LinkedinRepository extends JpaRepository<Linkedin,Integer> {
+    void deleteLinkedinByUsersid(Integer usersid);
 }

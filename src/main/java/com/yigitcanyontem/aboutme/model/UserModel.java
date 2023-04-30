@@ -1,4 +1,4 @@
-package com.yigitcanyontem.aboutme.entities;
+package com.yigitcanyontem.aboutme.model;
 
 
 import java.sql.Date;

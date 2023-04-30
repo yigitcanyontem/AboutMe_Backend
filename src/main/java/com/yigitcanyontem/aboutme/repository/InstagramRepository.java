@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface InstagramRepository extends JpaRepository<Instagram,Integer> {
+    void deleteInstagramByUsersid(Integer usersid);
 }

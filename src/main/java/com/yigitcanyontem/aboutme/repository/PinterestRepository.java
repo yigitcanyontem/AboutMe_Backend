@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PinterestRepository extends JpaRepository<Pinterest,Integer> {
+    void deletePinterestByUsersid(Integer usersid);
 }
