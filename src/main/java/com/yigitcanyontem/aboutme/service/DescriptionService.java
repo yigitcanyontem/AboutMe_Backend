@@ -20,5 +20,8 @@ public class DescriptionService {
     public Description description(Integer id){
         return descriptionRepository.findById(id).orElse(new Description());
     }
-
+    @Transactional
+    public void deleteUserDescription(Integer usersid){
+        descriptionRepository.deleteDescriptionByUsersid(usersid);
+    }
 }

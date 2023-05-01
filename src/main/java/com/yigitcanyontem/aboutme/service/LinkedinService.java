@@ -27,4 +27,9 @@ public class LinkedinService {
     public Linkedin getLinkedin(Integer id){
         return linkedinRepository.findById(id).orElse(new Linkedin());
     }
+
+    @Transactional
+    public void deleteUserLinkedin(Integer usersid){
+        linkedinRepository.deleteLinkedinByUsersid(usersid);
+    }
 }

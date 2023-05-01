@@ -27,5 +27,8 @@ public class InstagramService {
         return instagramRepository.findById(id).orElse(new Instagram());
     }
 
-
+    @Transactional
+    public void deleteUserInstagram(Integer usersid){
+        instagramRepository.deleteInstagramByUsersid(usersid);
+    }
 }

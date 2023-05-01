@@ -2,6 +2,8 @@ package com.yigitcanyontem.aboutme.repository;
 
 import com.yigitcanyontem.aboutme.entities.FavMovie;
 import com.yigitcanyontem.aboutme.entities.FavShows;
+import com.yigitcanyontem.aboutme.entities.Users;
+import org.apache.catalina.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -11,6 +13,9 @@ import java.util.List;
 
 @Repository
 public interface FavShowsRepository extends JpaRepository<FavShows,Integer> {
-    @Query("SELECT fm.showid FROM FavShows fm WHERE fm.usersid = :usersid")
-    List<Integer> findByUserId(@Param("usersid") Integer usersid);
+    List<FavShows> findByUsersid(Users usersid);
+    @Query("SELECT max(a.id) FROM FavShows a")
+    int maxId();
+    void deleteFavShowsByUsersid(Users usersid);
+    void deleteFavShowsByUsersidAndShowid(Users usersid, Integer showid);
 }

@@ -22,4 +22,9 @@ public class PinterestService {
     public Pinterest getPinterest(Integer id){
         return pinterestRepository.findById(id).orElse(new Pinterest());
     }
+
+    @Transactional
+    public void deleteUserPinterest(Integer usersid){
+        pinterestRepository.deletePinterestByUsersid(usersid);
+    }
 }

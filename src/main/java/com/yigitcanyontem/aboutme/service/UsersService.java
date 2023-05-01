@@ -2,6 +2,7 @@ package com.yigitcanyontem.aboutme.service;
 
 import com.yigitcanyontem.aboutme.entities.Users;
 import com.yigitcanyontem.aboutme.repository.UsersRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,5 +30,10 @@ public class UsersService {
     }
     public List<Users> usersList(String username){
         return usersRepository.findByUsernameContaining(username);
+    }
+
+    @Transactional
+    public void deleteUser(Integer usersid){
+        usersRepository.deleteById(usersid);
     }
 }

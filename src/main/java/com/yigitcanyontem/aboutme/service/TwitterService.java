@@ -27,4 +27,9 @@ public class TwitterService {
     public Twitter getTwitter(Integer id){
         return twitterRepository.findById(id).orElse(new Twitter());
     }
+
+    @Transactional
+    public void deleteUserTwitter(Integer usersid){
+        twitterRepository.deleteTwitterByUsersid(usersid);
+    }
 }

@@ -227,6 +227,9 @@ public class MovieRestController {
 
         List<Album> albums = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
+            if(list.get(i).get("mbid").asText().equals("")){
+                continue;
+            }
             Album album = new Album();
             JsonNode images = list.get(i).findValue("image");
             album.setMbid(list.get(i).findValue("mbid").asText());
@@ -248,7 +251,12 @@ public class MovieRestController {
 
         assert json != null;
         String temp = Arrays.toString(json.split("\""));
-        String s = temp.substring(temp.indexOf("tag"),temp.indexOf("image"));
+        String s;
+        try {
+             s = temp.substring(temp.indexOf("tag"),temp.indexOf("image"));
+        }catch (Exception e){
+             s = temp.substring(temp.indexOf("tag"),temp.indexOf("playcount"));
+        }
         s = s.substring(s.lastIndexOf("name"));
         s = s.replaceAll("[^a-zA-Z\\s]", "");
         Album album = new Album();
@@ -283,7 +291,6 @@ public class MovieRestController {
 
         return usersService.addUser(users);
     }
-
     @GetMapping("/user/{id}")
     public Users getCustomer(@PathVariable Integer id){
         return usersService.getUser(id);
@@ -319,8 +326,6 @@ public class MovieRestController {
         userOneModel.setFavbooks(getFavBooks(id));
         return userOneModel;
     }
-
-
     @PutMapping("/user/update")
     public String updateCustomer(@RequestBody AssignModel assignModel) {
         System.out.println(assignModel);
@@ -347,44 +352,105 @@ public class MovieRestController {
         }
         return "Success";
     }
+    @DeleteMapping("/user/delete/{usersid}")
+    public String updateCustomer(@PathVariable Integer usersid) {
+        System.out.println(usersid);
 
+        instagramService.deleteUserInstagram(usersid);
+        twitterService.deleteUserTwitter(usersid);
+        pinterestService.deleteUserPinterest(usersid);
+        linkedinService.deleteUserLinkedin(usersid);
+        favShowsService.deleteUserFavShows(getCustomer(usersid));
+        favMovieService.deleteUserFavMovie(getCustomer(usersid));
+        favAlbumsService.deleteUserFavAlbums(getCustomer(usersid));
+        favBooksService.deleteUserFavBooks(getCustomer(usersid));
+        descriptionService.deleteUserDescription(usersid);
+        usersService.deleteUser(usersid);
+        return "Success";
+    }
     /////////////////////FavMovies////////////////////////
     @GetMapping("/user/favmovie/{id}")
     public List<Movie> getFavMovies(@PathVariable Integer id) throws JsonProcessingException {
-        List<Integer> movieids = favMovieService.findByUserId(id);
+        List<FavMovie> movieids = favMovieService.findByUserId(getCustomer(id));
+
+
         List<Movie> movies = new ArrayList<>();
-        for (Integer x:movieids){
-            movies.add(getSingleMovieById(x));
+        for (FavMovie x:movieids){
+            movies.add(getSingleMovieById(x.getMovieid()));
         }
         return movies;
     }
     /////////////////////FavShows////////////////////////
     @GetMapping("/user/favshows/{id}")
     public List<Show> getFavShows(@PathVariable Integer id) throws JsonProcessingException {
-        List<Integer> showids = favShowsService.findByUserId(id);
+        List<FavShows> showids = favShowsService.findByUserId(getCustomer(id));
         List<Show> shows = new ArrayList<>();
-        for (Integer x:showids){
-            shows.add(getSingleShowById(x));
+        for (FavShows x:showids){
+            shows.add(getSingleShowById(x.getShowid()));
         }
         return shows;
     }
     /////////////////////FavAlbums////////////////////////
     @GetMapping("/user/favalbums/{id}")
-    public List<String> getFavAlbums(@PathVariable Integer id){
-        return favAlbumsService.findByUserId(id);
+    public List<Album> getFavAlbums(@PathVariable Integer id) throws JsonProcessingException {
+        List<FavAlbums> albumids = favAlbumsService.findByUserId(getCustomer(id));
+        List<Album> albums = new ArrayList<>();
+        for (FavAlbums x:albumids){
+            albums.add(getSingleAlbumById(x.getAlbumid()));
+        }
+        return albums;
     }
     /////////////////////FavBooks////////////////////////
     @GetMapping("/user/favbooks/{id}")
     public List<Book> getFavBooks(@PathVariable Integer id) throws JsonProcessingException {
-        List<String> bookids = favBooksService.findByUserId(id);
+        List<FavBooks> bookids = favBooksService.findByUserId(getCustomer(id));
         List<Book> books = new ArrayList<>();
-        for (String x:bookids){
-            books.add(getSingleBookById(x));
+        for (FavBooks x:bookids){
+            books.add(getSingleBookById(x.getBookid()));
         }
         return books;
     }
+    @PutMapping("/user/favmovie/{usersid}/{movieid}")
+    public String saveFavMovies(@PathVariable Integer usersid,@PathVariable Integer movieid)  {
+        favMovieService.saveFavMovie(getCustomer(usersid),movieid);
+        return "Success";
+    }
+    @PutMapping("/user/favshows/{usersid}/{showid}")
+    public String saveFavShows(@PathVariable Integer usersid,@PathVariable Integer showid)  {
+        favShowsService.saveFavShows(getCustomer(usersid),showid);
+        return "Success";
+    }
+    @PutMapping("/user/favalbums/{usersid}/{albumid}")
+    public String saveFavAlbums(@PathVariable Integer usersid,@PathVariable String albumid)  {
+        favAlbumsService.saveFavAlbums(getCustomer(usersid),albumid);
+        return "Success";
+    }
+    @PutMapping("/user/favbooks/{usersid}/{bookid}")
+    public String saveFavBooks(@PathVariable Integer usersid,@PathVariable String bookid)  {
+        favBooksService.saveFavBooks(getCustomer(usersid),bookid);
+        return "Success";
+    }
 
-
+    @DeleteMapping("/user/favmovie/delete/{usersid}/{movieid}")
+    public String deleteFavMovies(@PathVariable Integer usersid,@PathVariable Integer movieid)  {
+        favMovieService.deleteUserFavMovieById(getCustomer(usersid),movieid);
+        return "Success";
+    }
+    @DeleteMapping("/user/favshows/delete/{usersid}/{showid}")
+    public String deleteFavShows(@PathVariable Integer usersid,@PathVariable Integer showid)  {
+        favShowsService.deleteUserFavShowsById(getCustomer(usersid),showid);
+        return "Success";
+    }
+    @DeleteMapping("/user/favalbums/delete/{usersid}/{albumid}")
+    public String deleteFavAlbums(@PathVariable Integer usersid,@PathVariable String albumid)  {
+        favAlbumsService.deleteUserFavAlbumsById(getCustomer(usersid),albumid);
+        return "Success";
+    }
+    @DeleteMapping("/user/favbooks/delete/{usersid}/{bookid}")
+    public String deleteFavBooks(@PathVariable Integer usersid,@PathVariable String bookid)  {
+        favBooksService.deleteUserFavBooksById(getCustomer(usersid),bookid);
+        return "Success";
+    }
     /////////////////////Languages////////////////////////
     @GetMapping("/languages")
     public List<Language> getMovieLanguages(){

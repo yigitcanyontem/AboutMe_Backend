@@ -1,13 +1,12 @@
 package com.yigitcanyontem.aboutme.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Table(name = "favalbums")
@@ -17,8 +16,12 @@ import lombok.ToString;
 @ToString
 public class FavAlbums {
     @Id
-    @Column(name = "usersid")
-    private Integer usersid;
+    @Column(name = "id")
+    private Integer id;
+    @ManyToOne()
+    @JoinColumn(name = "usersid")
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
+    private Users usersid;
     @Column(name = "albumid")
     private String albumid;
 

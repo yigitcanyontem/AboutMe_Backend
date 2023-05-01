@@ -12,7 +12,7 @@ public class UserOneModel {
     private Description description;
     private List<Movie> favmovies;
     private List<Show> favshows;
-    private List<String> favalbums;
+    private List<Album> favalbums;
     private List<Book> favbooks;
 
     public UserOneModel() {
@@ -58,11 +58,11 @@ public class UserOneModel {
         this.favshows = favshows;
     }
 
-    public List<String> getFavalbums() {
+    public List<Album> getFavalbums() {
         return favalbums;
     }
 
-    public void setFavalbums(List<String> favalbums) {
+    public void setFavalbums(List<Album> favalbums) {
         this.favalbums = favalbums;
     }
 
