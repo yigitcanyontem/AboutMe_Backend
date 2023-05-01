@@ -30,4 +30,6 @@ public class FavMovieService {
     public void saveFavMovie(Users usersid, Integer favmovieid){
         favMovieRepository.save(new FavMovie(favMovieRepository.maxId()+1,usersid,favmovieid));
     }
+
+
 }
