@@ -1,5 +1,6 @@
 package com.yigitcanyontem.aboutme.service;
 
+import com.yigitcanyontem.aboutme.entities.Passwords;
 import com.yigitcanyontem.aboutme.entities.SocialMedia;
 import com.yigitcanyontem.aboutme.entities.Users;
 import com.yigitcanyontem.aboutme.model.AssignModel;
@@ -39,6 +40,8 @@ public class UsersService {
     FavBooksService favBooksService;
     @Autowired
     CountryService countryService;
+    @Autowired
+    PasswordsService passwordsService;
     public Users getUser(Integer id){
         return usersRepository.findById(id).orElseThrow();
     }
@@ -88,6 +91,7 @@ public class UsersService {
         favAlbumsService.deleteUserFavAlbums(getUser(usersid));
         favBooksService.deleteUserFavBooks(getUser(usersid));
         descriptionService.deleteUserDescription(usersid);
+        passwordsService.deletePasswordsByUsersid(getUser(usersid));
         usersRepository.deleteById(usersid);
         return "Success";
     }
@@ -101,8 +105,9 @@ public class UsersService {
         return socialMedia;
     }
 
-    public Users newCustomer( UserModel user){
+    public void newCustomer( UserModel user){
         Users users = new Users();
+        Passwords passwords = new Passwords();
         users.setId(max()+1);
         users.setFirstName(user.getFirstName());
         users.setLastName(user.getLastName());
@@ -110,6 +115,10 @@ public class UsersService {
         users.setCountry(countryService.singleCountry(user.getCountry()));
         users.setEmail(user.getEmail());
         users.setUsername(user.getUsername());
-        return usersRepository.save(users);
+        usersRepository.save(users);
+        passwords.setId(passwordsService.max()+1);
+        passwords.setUsersid(users);
+        passwords.setPassword(user.getPassword());
+        passwordsService.savePassword(passwords);
     }
 }

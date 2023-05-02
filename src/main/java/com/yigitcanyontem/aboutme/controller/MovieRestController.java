@@ -38,8 +38,8 @@ public class MovieRestController {
     BookService bookService;
     @Autowired
     AlbumService albumService;
-
-
+    @Autowired
+    PasswordsService passwordsService;
     /////////////////////SHOWS////////////////////////
     @GetMapping("/tv/{showid}")
     public Show getSingleShowById(@PathVariable Integer showid) throws JsonProcessingException {
@@ -79,11 +79,11 @@ public class MovieRestController {
 
 
 
-
     /////////////////////USERS////////////////////////
     @PostMapping("/user/create")
-    public Users newCustomer(@RequestBody UserModel user){
-        return usersService.newCustomer(user);
+    public String newCustomer(@RequestBody UserModel user){
+         usersService.newCustomer(user);
+         return "Success";
     }
     @GetMapping("/user/{id}")
     public Users getCustomer(@PathVariable Integer id){
@@ -97,9 +97,9 @@ public class MovieRestController {
     public Description getCustomerDescription(@PathVariable Integer id){
         return descriptionService.description(id);
     }
-    @GetMapping("/search/user/{username}")
-    public List<Users> getUserSearchResults(@PathVariable String username) {
-        return usersService.usersList(username);
+    @PutMapping("/user/login")
+    public String getPassword(@RequestBody PasswordModel passwordModel) {
+        return passwordsService.logIn(passwordModel);
     }
     @PutMapping("/user/update")
     public String updateCustomer(@RequestBody AssignModel assignModel) {
@@ -140,6 +140,10 @@ public class MovieRestController {
         return albums;
     }
     /////////////////////FavBooks////////////////////////
+    @GetMapping("/search/user/{username}")
+    public List<Users> getUserSearchResults(@PathVariable String username) {
+        return usersService.usersList(username);
+    }
     @GetMapping("/user/favbooks/{id}")
     public List<Book> getFavBooks(@PathVariable Integer id) throws JsonProcessingException {
         List<FavBooks> bookids = favBooksService.findByUserId(getCustomer(id));
