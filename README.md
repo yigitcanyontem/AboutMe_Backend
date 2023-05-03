@@ -3,9 +3,9 @@ To Do
 
 custom exceptions,
 
-spring security authorization and login,
+spring security authorization ,
 
 tests,
 
-seperate controllers,
+
 
