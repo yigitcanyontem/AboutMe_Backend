@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-
-import java.io.Serial;
 import java.sql.Date;
 
 @Entity

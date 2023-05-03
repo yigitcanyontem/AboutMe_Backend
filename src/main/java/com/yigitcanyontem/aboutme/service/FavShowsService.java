@@ -2,7 +2,6 @@ package com.yigitcanyontem.aboutme.service;
 
 import com.yigitcanyontem.aboutme.entities.FavShows;
 import com.yigitcanyontem.aboutme.entities.Users;
-import com.yigitcanyontem.aboutme.repository.FavMovieRepository;
 import com.yigitcanyontem.aboutme.repository.FavShowsRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,16 +1,11 @@
 package com.yigitcanyontem.aboutme.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.yigitcanyontem.aboutme.entities.*;
 import com.yigitcanyontem.aboutme.model.*;
 import com.yigitcanyontem.aboutme.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.util.*;
 
 @RestController

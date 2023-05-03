@@ -1,7 +1,6 @@
 package com.yigitcanyontem.aboutme.service;
 
 import com.yigitcanyontem.aboutme.entities.Pinterest;
-import com.yigitcanyontem.aboutme.entities.Twitter;
 import com.yigitcanyontem.aboutme.repository.PinterestRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
