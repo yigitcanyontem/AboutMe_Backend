@@ -16,8 +16,10 @@ import java.util.List;
 public class AlbumService {
     @Value("${last_fm_api_key}")
     String last_fm_api_key;
+    @Value("${last_fm_url}")
+    String last_fm_url;
     public List<Album> getAlbumSearchResults(String title) throws JsonProcessingException {
-        String url = "http://ws.audioscrobbler.com/2.0/?method=album.search&album="+title+"&api_key="+last_fm_api_key+"&format=json";
+        String url = last_fm_url+title+"&api_key="+last_fm_api_key+"&format=json";
         RestTemplate restTemplate = new RestTemplate();
         String json = restTemplate.getForObject(url,String.class);
         ObjectMapper objectMapper = new ObjectMapper();
@@ -40,7 +42,7 @@ public class AlbumService {
         return albums;
     }
     public Album getSingleAlbumById(String mbid) throws JsonProcessingException {
-        String url = "https://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key="+last_fm_api_key+"&mbid="+mbid+"&format=json";
+        String url = last_fm_url+last_fm_api_key+"&mbid="+mbid+"&format=json";
         RestTemplate restTemplate = new RestTemplate();
         String json = restTemplate.getForObject(url,String.class);
         ObjectMapper objectMapper = new ObjectMapper();
