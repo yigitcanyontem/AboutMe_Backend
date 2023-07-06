@@ -17,13 +17,31 @@ import org.hibernate.annotations.OnDeleteAction;
 @ToString
 public class FavAlbums {
     @Id
+    @SequenceGenerator(
+            name = "favalbums_id_seq",
+            sequenceName = "favalbums_id_seq",
+            initialValue = 1,
+            allocationSize = 1
+    )
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "favalbums_id_seq"
+    )
     @Column(name = "id")
     private Integer id;
+
     @ManyToOne()
-    @JoinColumn(name = "usersid")
+    @JoinColumn(
+            name = "usersid",
+            nullable = false
+    )
     @OnDelete(action = OnDeleteAction.NO_ACTION)
     private Users usersid;
-    @Column(name = "albumid")
+
+    @Column(
+            name = "albumid",
+            nullable = false
+    )
     private String albumid;
 
 }

@@ -12,6 +12,7 @@ import com.yigitcanyontem.aboutme.users.descriptions.DescriptionService;
 import com.yigitcanyontem.aboutme.users.passwords.PasswordsService;
 import com.yigitcanyontem.aboutme.users.socialmedia.SocialMediaService;
 import jakarta.transaction.Transactional;
+import org.springframework.aop.AopInvocationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -39,9 +40,6 @@ public class UsersService {
     SocialMediaService socialMediaService;
     public Users getUser(Integer id){
         return usersRepository.findById(id).orElseThrow();
-    }
-    public Integer max(){
-        return usersRepository.maxUsersId();
     }
     public Integer getUserByUsername(String username){
         return usersRepository.getUsersByUsername(username).getId();
@@ -98,10 +96,9 @@ public class UsersService {
     }
 
 
-    public void newCustomer( UserModel user){
+    public void newCustomer(UserModel user){
         Users users = new Users();
         Passwords passwords = new Passwords();
-        users.setId(max()+1);
         users.setFirstName(user.getFirstName());
         users.setLastName(user.getLastName());
         users.setDate_of_birth(user.getDate_of_birth());
@@ -109,10 +106,10 @@ public class UsersService {
         users.setEmail(user.getEmail());
         users.setUsername(user.getUsername());
         usersRepository.save(users);
-        passwords.setId(passwordsService.max()+1);
-        passwords.setUsersid(users);
+        Users users1 = usersRepository.getUsersByUsername(user.getUsername());
+        passwords.setUsersid(users1);
         passwords.setPassword(user.getPassword());
         passwordsService.savePassword(passwords);
-        socialMediaService.saveSocialMedia(new SocialMedia(socialMediaService.max()+1, users,"","","",""));
+        socialMediaService.saveSocialMedia(new SocialMedia(users1,"","","",""));
     }
 }

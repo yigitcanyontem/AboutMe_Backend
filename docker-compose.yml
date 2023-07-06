@@ -1,0 +1,13 @@
+services:
+  db:
+    image: postgres
+    restart: always
+    ports:
+      - "4321:5432"
+    environment:
+      POSTGRES_USERNAME: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: aboutme
+
+
+#docker ps --format "ID\t{{.ID}}\nNAME\t{{.Names}}\nIMAGE\t{{.Image}}\nPORTS\t{{.Ports}}\nCOMMAND\t{{.Command}}\nCREATED\t{{.CreatedAt}}\nSTATUS\t{{.Status}}\n"

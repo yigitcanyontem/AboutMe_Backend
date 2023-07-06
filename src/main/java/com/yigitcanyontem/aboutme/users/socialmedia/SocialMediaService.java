@@ -2,6 +2,7 @@ package com.yigitcanyontem.aboutme.users.socialmedia;
 
 import com.yigitcanyontem.aboutme.users.Users;
 import jakarta.transaction.Transactional;
+import org.springframework.aop.AopInvocationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +12,11 @@ public class SocialMediaService {
     public SocialMediaRepository socialMediaRepository;
 
     public Integer max(){
-        return socialMediaRepository.maxId();
+        try {
+            return socialMediaRepository.maxId();
+        }catch (AopInvocationException e){
+            return 0;
+        }
     }
     public SocialMedia getSocialMedia(Integer id) {
         return socialMediaRepository.findSocialMediaByUsersid(id);

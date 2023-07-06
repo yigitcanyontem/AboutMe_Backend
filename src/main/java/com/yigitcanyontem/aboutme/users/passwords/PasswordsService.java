@@ -2,6 +2,7 @@ package com.yigitcanyontem.aboutme.users.passwords;
 
 import com.yigitcanyontem.aboutme.users.Users;
 import com.yigitcanyontem.aboutme.users.UsersRepository;
+import org.springframework.aop.AopInvocationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +22,11 @@ public class PasswordsService {
         }
     }
     public Integer max(){
-        return passwordsRepository.maxId();
+        try {
+            return passwordsRepository.maxId();
+        }catch (AopInvocationException e){
+            return 0;
+        }
     }
 
     public Passwords savePassword(Passwords passwords){
