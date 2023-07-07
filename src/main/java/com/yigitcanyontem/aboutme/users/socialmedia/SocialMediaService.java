@@ -3,13 +3,15 @@ package com.yigitcanyontem.aboutme.users.socialmedia;
 import com.yigitcanyontem.aboutme.users.Users;
 import jakarta.transaction.Transactional;
 import org.springframework.aop.AopInvocationException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class SocialMediaService {
-    @Autowired
-    public SocialMediaRepository socialMediaRepository;
+    private final SocialMediaRepository socialMediaRepository;
+
+    public SocialMediaService(SocialMediaRepository socialMediaRepository) {
+        this.socialMediaRepository = socialMediaRepository;
+    }
 
     public Integer max(){
         try {

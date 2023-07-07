@@ -3,6 +3,7 @@ package com.yigitcanyontem.aboutme.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.yigitcanyontem.aboutme.exceptions.SearchNotFoundException;
 import com.yigitcanyontem.aboutme.model.Movie;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -21,10 +22,15 @@ public class MovieService {
     public Movie getSingleMovieById(Integer movieid) throws JsonProcessingException {
         String url = "https://api.themoviedb.org/3/movie/"+movieid+"?api_key="+ tmdb_api_key;
         RestTemplate restTemplate = new RestTemplate();
+        try {
+            String json = restTemplate.getForObject(url,String.class);
+        }catch (Exception ignored){
+            throw new SearchNotFoundException("Movie with id " + movieid + " doesn't exist");
+        }
         String json = restTemplate.getForObject(url,String.class);
+
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode list = objectMapper.readTree(json);
-
         assert json != null;
         String temp = Arrays.toString(json.split("\""));
         String s = temp.substring(temp.indexOf("homepage"),temp.indexOf("imdb_id"));
@@ -69,6 +75,9 @@ public class MovieService {
             movies.add(movie);
         }
         movies.sort(Comparator.comparing(Movie::getVote_count).reversed());
+        if (movies.size() == 0){
+            throw new SearchNotFoundException("No Movie Found");
+        }
         return movies;
     }
 }

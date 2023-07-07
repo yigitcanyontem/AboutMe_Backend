@@ -2,15 +2,17 @@ package com.yigitcanyontem.aboutme.favalbums;
 
 import com.yigitcanyontem.aboutme.users.Users;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class FavAlbumsService {
-    @Autowired
-    FavAlbumsRepository favAlbumsRepository;
+    private final FavAlbumsRepository favAlbumsRepository;
+
+    public FavAlbumsService(FavAlbumsRepository favAlbumsRepository) {
+        this.favAlbumsRepository = favAlbumsRepository;
+    }
 
     public List<FavAlbums> findByUserId(Users usersid){
         return favAlbumsRepository.findByUsersid(usersid);

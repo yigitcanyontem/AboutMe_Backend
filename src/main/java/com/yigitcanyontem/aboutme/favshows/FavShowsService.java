@@ -9,8 +9,11 @@ import java.util.List;
 
 @Service
 public class FavShowsService {
-    @Autowired
-    FavShowsRepository favShowsRepository;
+    private final FavShowsRepository favShowsRepository;
+
+    public FavShowsService(FavShowsRepository favShowsRepository) {
+        this.favShowsRepository = favShowsRepository;
+    }
 
     public List<FavShows> findByUserId(Users usersid){
         return favShowsRepository.findByUsersid(usersid);

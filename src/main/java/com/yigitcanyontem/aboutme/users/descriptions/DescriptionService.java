@@ -1,13 +1,16 @@
 package com.yigitcanyontem.aboutme.users.descriptions;
 
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class DescriptionService {
-    @Autowired
-    DescriptionRepository descriptionRepository;
+    private final DescriptionRepository descriptionRepository;
+
+    public DescriptionService(DescriptionRepository descriptionRepository) {
+        this.descriptionRepository = descriptionRepository;
+    }
+
     @Transactional
     public void saveDescription(Integer id, String  description){
         if (descriptionRepository.existsById(id)){

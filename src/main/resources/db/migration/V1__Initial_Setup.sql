@@ -77,7 +77,7 @@ create table socialmedia (
                                         match simple on update no action on delete no action
 );
 
-
+CREATE SEQUENCE user_id_seq START 1;
 create unique index user_email_unique on users using btree (email);
 create unique index user_username_unique on users using btree (username);
 

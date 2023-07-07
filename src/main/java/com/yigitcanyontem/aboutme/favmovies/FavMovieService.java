@@ -2,14 +2,16 @@ package com.yigitcanyontem.aboutme.favmovies;
 
 import com.yigitcanyontem.aboutme.users.Users;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
 public class FavMovieService {
-    @Autowired
-    FavMovieRepository favMovieRepository;
+    private final FavMovieRepository favMovieRepository;
+
+    public FavMovieService(FavMovieRepository favMovieRepository) {
+        this.favMovieRepository = favMovieRepository;
+    }
 
     public List<FavMovie> findByUserId(Users usersid){
         return favMovieRepository.findByUsersid(usersid);

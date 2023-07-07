@@ -22,11 +22,11 @@ import java.sql.Date;
 })
 @NoArgsConstructor
 public class Users {
+
     @Id
     @SequenceGenerator(
             name = "user_id_seq",
             sequenceName = "user_id_seq",
-            initialValue = 1,
             allocationSize = 1
     )
     @GeneratedValue(

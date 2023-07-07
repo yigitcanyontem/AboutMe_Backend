@@ -1,6 +1,7 @@
 package com.yigitcanyontem.aboutme.users;
 
 import com.yigitcanyontem.aboutme.country.CountryService;
+import com.yigitcanyontem.aboutme.exceptions.SearchNotFoundException;
 import com.yigitcanyontem.aboutme.users.passwords.Passwords;
 import com.yigitcanyontem.aboutme.users.socialmedia.SocialMedia;
 import com.yigitcanyontem.aboutme.favalbums.FavAlbumsService;
@@ -12,44 +13,63 @@ import com.yigitcanyontem.aboutme.users.descriptions.DescriptionService;
 import com.yigitcanyontem.aboutme.users.passwords.PasswordsService;
 import com.yigitcanyontem.aboutme.users.socialmedia.SocialMediaService;
 import jakarta.transaction.Transactional;
-import org.springframework.aop.AopInvocationException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Objects;
 
 @Service
 public class UsersService {
-    @Autowired
-    UsersRepository usersRepository;
-    @Autowired
-    DescriptionService descriptionService;
-    @Autowired
-    FavMovieService favMovieService;
-    @Autowired
-    FavAlbumsService favAlbumsService;
-    @Autowired
-    FavShowsService favShowsService;
-    @Autowired
-    FavBooksService favBooksService;
-    @Autowired
-    CountryService countryService;
-    @Autowired
-    PasswordsService passwordsService;
-    @Autowired
-    SocialMediaService socialMediaService;
+    private final UsersRepository usersRepository;
+    private final DescriptionService descriptionService;
+    private final FavMovieService favMovieService;
+    private final FavAlbumsService favAlbumsService;
+    private final FavShowsService favShowsService;
+    private final FavBooksService favBooksService;
+    private final CountryService countryService;
+    private final PasswordsService passwordsService;
+    private final SocialMediaService socialMediaService;
+
+    public UsersService(UsersRepository usersRepository, DescriptionService descriptionService
+            , FavMovieService favMovieService, FavAlbumsService favAlbumsService, FavShowsService favShowsService,
+                        FavBooksService favBooksService, CountryService countryService, PasswordsService passwordsService,
+                        SocialMediaService socialMediaService) {
+        this.usersRepository = usersRepository;
+        this.descriptionService = descriptionService;
+        this.favMovieService = favMovieService;
+        this.favAlbumsService = favAlbumsService;
+        this.favShowsService = favShowsService;
+        this.favBooksService = favBooksService;
+        this.countryService = countryService;
+        this.passwordsService = passwordsService;
+        this.socialMediaService = socialMediaService;
+    }
+
     public Users getUser(Integer id){
-        return usersRepository.findById(id).orElseThrow();
+        return usersRepository.findById(id).orElseThrow(
+                () -> new SearchNotFoundException(
+                        "User with id " + id + " not found"
+                )
+        );
     }
     public Integer getUserByUsername(String username){
         return usersRepository.getUsersByUsername(username).getId();
     }
     public List<Users> usersList(String username){
+        List<Users> list = usersRepository.findByUsernameContaining(username);
+        if (list.size() == 0){
+            throw new SearchNotFoundException("No Users Found");
+        }
         return usersRepository.findByUsernameContaining(username);
     }
 
 
     public String updateCustomer(AssignModel assignModel) {
+        try {
+            int id = getUserByUsername(assignModel.getUsername());
+        }catch (NullPointerException e){
+            throw new SearchNotFoundException("User with username " + assignModel.getUsername() + " not found");
+        }
+
         int id = getUserByUsername(assignModel.getUsername());
         String description = assignModel.getDescription();
         String instagramuser = assignModel.getInstagramuser();
@@ -58,7 +78,6 @@ public class UsersService {
         String twitteruser = assignModel.getTwitteruser();
         SocialMedia socialMedia = socialMediaService.getSocialMediaRef(getUser(id));
         socialMediaService.deleteSocialMedia(getUser(id));
-        socialMedia.setId(socialMediaService.max()+1);
         if (!Objects.equals(description, "")){
             descriptionService.saveDescription(id,description);
         }
@@ -79,6 +98,9 @@ public class UsersService {
     }
     @Transactional
     public String deleteCustomer(Integer usersid) {
+        if (!usersRepository.existsById(usersid)){
+            throw new SearchNotFoundException("User with id "+ usersid + " not found");
+        }
         Users users = getUser(usersid);
         socialMediaService.deleteSocialMedia(users);
         favShowsService.deleteUserFavShows(users);
@@ -91,12 +113,13 @@ public class UsersService {
         return "Success";
     }
 
-    public SocialMedia getCustomerSocialMedia(Integer id){
-        return socialMediaService.getSocialMedia(id);
-    }
-
-
     public void newCustomer(UserModel user){
+        if (usersRepository.existsByUsername(user.getUsername())){
+            throw new SearchNotFoundException("Username taken");
+        }
+        if (usersRepository.existsByEmail(user.getEmail())){
+            throw new SearchNotFoundException("Email taken");
+        }
         Users users = new Users();
         Passwords passwords = new Passwords();
         users.setFirstName(user.getFirstName());

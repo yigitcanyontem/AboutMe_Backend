@@ -3,6 +3,7 @@ package com.yigitcanyontem.aboutme.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.yigitcanyontem.aboutme.exceptions.SearchNotFoundException;
 import com.yigitcanyontem.aboutme.model.Book;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -41,14 +42,22 @@ public class BookService {
                 books.add(book);
             }
         }
+        if (books.size() == 0){
+            throw new SearchNotFoundException("No Book Found");
+        }
         return books;
     }
     public Book getSingleBookById(String bookid) throws JsonProcessingException {
         String url = "https://www.googleapis.com/books/v1/volumes/"+bookid;
         RestTemplate restTemplate = new RestTemplate();
+        try {
+            String json = restTemplate.getForObject(url,String.class);
+        }catch (Exception ignored){
+            throw new SearchNotFoundException("Book with id " + bookid + " doesn't exist");
+        }
         String json = restTemplate.getForObject(url,String.class);
         ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode list = objectMapper.readTree(json);
+        JsonNode list = objectMapper.readTree(bookid);
 
 
         Book book = new Book();

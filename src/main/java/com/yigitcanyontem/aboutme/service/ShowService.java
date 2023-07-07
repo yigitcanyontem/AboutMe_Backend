@@ -3,6 +3,7 @@ package com.yigitcanyontem.aboutme.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.yigitcanyontem.aboutme.exceptions.SearchNotFoundException;
 import com.yigitcanyontem.aboutme.model.Show;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -20,11 +21,16 @@ public class ShowService {
     public Show getSingleShowById(Integer showid) throws JsonProcessingException {
         String url = "https://api.themoviedb.org/3/tv/"+showid+"?api_key="+ tmdb_api_key;
         RestTemplate restTemplate = new RestTemplate();
+        try {
+            String json = restTemplate.getForObject(url,String.class);
+        }catch (Exception ignored){
+            throw new SearchNotFoundException("Show with id " + showid + " doesn't exist");
+        }
         String json = restTemplate.getForObject(url,String.class);
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode list = objectMapper.readTree(json);
-
         assert json != null;
+
         String temp = Arrays.toString(json.split("\""));
         String s1 = temp.substring(temp.indexOf("homepage"),temp.indexOf("languages"));
         String s = s1.substring(s1.indexOf("id"),s1.indexOf("in_production"));
@@ -70,6 +76,9 @@ public class ShowService {
             shows.add(show);
         }
         shows.sort(Comparator.comparing(Show::getVote_count).reversed());
+        if (shows.size() == 0){
+            throw new SearchNotFoundException("No Show Found");
+        }
         return shows;
     }
 }
