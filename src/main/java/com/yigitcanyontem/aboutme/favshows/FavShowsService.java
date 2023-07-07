@@ -28,6 +28,6 @@ public class FavShowsService {
         favShowsRepository.deleteFavShowsByUsersidAndShowid(usersid,showid);
     }
     public void saveFavShows(Users usersid, Integer favshowsid){
-        favShowsRepository.save(new FavShows(favShowsRepository.maxId()+1,usersid,favshowsid));
+        favShowsRepository.save(new FavShows(usersid,favshowsid));
     }
 }

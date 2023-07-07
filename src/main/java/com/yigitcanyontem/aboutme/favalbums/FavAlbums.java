@@ -11,10 +11,6 @@ import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Table(name = "favalbums")
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@ToString
 public class FavAlbums {
     @Id
     @SequenceGenerator(
@@ -44,4 +40,45 @@ public class FavAlbums {
     )
     private String albumid;
 
+    public FavAlbums(Users usersid, String albumid) {
+        this.usersid = usersid;
+        this.albumid = albumid;
+    }
+
+    public FavAlbums() {
+
+    }
+
+    @Override
+    public String toString() {
+        return "FavAlbums{" +
+                "id=" + id +
+                ", usersid=" + usersid +
+                ", albumid='" + albumid + '\'' +
+                '}';
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Users getUsersid() {
+        return usersid;
+    }
+
+    public void setUsersid(Users usersid) {
+        this.usersid = usersid;
+    }
+
+    public String getAlbumid() {
+        return albumid;
+    }
+
+    public void setAlbumid(String albumid) {
+        this.albumid = albumid;
+    }
 }

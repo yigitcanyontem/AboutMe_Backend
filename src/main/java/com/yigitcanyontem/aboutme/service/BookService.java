@@ -57,7 +57,7 @@ public class BookService {
         }
         String json = restTemplate.getForObject(url,String.class);
         ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode list = objectMapper.readTree(bookid);
+        JsonNode list = objectMapper.readTree(json);
 
 
         Book book = new Book();

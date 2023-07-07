@@ -11,8 +11,6 @@ import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Table(name = "favbooks")
-@Data
-@AllArgsConstructor
 @NoArgsConstructor
 @ToString
 public class FavBooks {
@@ -43,4 +41,32 @@ public class FavBooks {
             nullable = false)
     private String bookid;
 
+    public FavBooks(Users usersid, String bookid) {
+        this.usersid = usersid;
+        this.bookid = bookid;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Users getUsersid() {
+        return usersid;
+    }
+
+    public void setUsersid(Users usersid) {
+        this.usersid = usersid;
+    }
+
+    public String getBookid() {
+        return bookid;
+    }
+
+    public void setBookid(String bookid) {
+        this.bookid = bookid;
+    }
 }

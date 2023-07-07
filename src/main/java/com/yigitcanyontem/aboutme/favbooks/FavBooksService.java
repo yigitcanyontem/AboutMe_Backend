@@ -27,6 +27,6 @@ public class FavBooksService {
         favBooksRepository.deleteFavBooksByUsersidAndBookid(usersid,bookid);
     }
     public void saveFavBooks(Users usersid, String favbooksid){
-        favBooksRepository.save(new FavBooks(favBooksRepository.maxId()+1,usersid,favbooksid));
+        favBooksRepository.save(new FavBooks(usersid,favbooksid));
     }
 }

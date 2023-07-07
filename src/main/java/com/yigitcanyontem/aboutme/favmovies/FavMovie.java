@@ -11,10 +11,6 @@ import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Table(name = "favmovie")
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@ToString
 public class FavMovie {
     @Id
     @SequenceGenerator(
@@ -43,5 +39,48 @@ public class FavMovie {
             nullable = false
     )
     private Integer movieid;
+
+    public FavMovie(Users usersid, Integer movieid) {
+        this.usersid = usersid;
+        this.movieid = movieid;
+    }
+
+    public FavMovie() {
+
+    }
+
+    @Override
+    public String toString() {
+        return "FavMovie{" +
+                "id=" + id +
+                ", usersid=" + usersid +
+                ", movieid=" + movieid +
+                '}';
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Users getUsersid() {
+        return usersid;
+    }
+
+    public void setUsersid(Users usersid) {
+        this.usersid = usersid;
+    }
+
+    public Integer getMovieid() {
+        return movieid;
+    }
+
+    public void setMovieid(Integer movieid) {
+        this.movieid = movieid;
+    }
+
 
 }

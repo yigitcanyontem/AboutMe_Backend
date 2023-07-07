@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 public interface SocialMediaRepository extends JpaRepository<SocialMedia, Integer> {
     @Query("SELECT max(a.id) FROM SocialMedia a")
     Integer maxId();
-    @Query(value = "SELECT * FROM SocialMedia b WHERE b.id =?1",nativeQuery = true)
+    @Query(value = "SELECT * FROM SocialMedia b WHERE b.usersid =?1",nativeQuery = true)
     SocialMedia findSocialMediaByUsersid(Integer usersid);
 
     SocialMedia getReferenceByUsersid(Users usersid);

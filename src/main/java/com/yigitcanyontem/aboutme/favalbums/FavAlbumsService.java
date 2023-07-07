@@ -27,6 +27,6 @@ public class FavAlbumsService {
         favAlbumsRepository.deleteFavAlbumsByUsersidAndAlbumid(usersid,albumid);
     }
     public void saveFavAlbums(Users usersid, String favalbumsid){
-        favAlbumsRepository.save(new FavAlbums(favAlbumsRepository.maxId()+1,usersid,favalbumsid));
+        favAlbumsRepository.save(new FavAlbums(usersid,favalbumsid));
     }
 }

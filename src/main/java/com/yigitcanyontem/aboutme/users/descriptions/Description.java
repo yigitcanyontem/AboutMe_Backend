@@ -11,8 +11,6 @@ import lombok.ToString;
 
 @Entity
 @Table(name = "description")
-@Data
-@AllArgsConstructor
 @NoArgsConstructor
 @ToString
 public class Description {
@@ -22,4 +20,25 @@ public class Description {
 
     @Column(name = "description")
     private String description;
+
+    public Description(Integer usersid, String description) {
+        this.usersid = usersid;
+        this.description = description;
+    }
+
+    public Integer getUsersid() {
+        return usersid;
+    }
+
+    public void setUsersid(Integer usersid) {
+        this.usersid = usersid;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }
