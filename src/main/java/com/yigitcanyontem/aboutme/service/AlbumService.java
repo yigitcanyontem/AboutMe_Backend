@@ -4,7 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yigitcanyontem.aboutme.exceptions.SearchNotFoundException;
+import com.yigitcanyontem.aboutme.favalbums.FavAlbumsRepository;
 import com.yigitcanyontem.aboutme.model.Album;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -20,6 +22,9 @@ public class AlbumService {
     String last_fm_api_key;
     @Value("${last_fm_url}")
     String last_fm_url;
+
+    @Autowired
+    private FavAlbumsRepository favAlbumsRepository;
 
     public List<Album> getAlbumSearchResults(String title) throws JsonProcessingException {
         String url = last_fm_url+"search&album="+title+"&api_key="+last_fm_api_key+"&format=json";
@@ -39,6 +44,7 @@ public class AlbumService {
             album.setArtist(list.get(i).findValue("artist").asText());
             album.setUrl(list.get(i).findValue("url").asText());
             album.setImage(images.get(3).findValue("#text").asText());
+            album.setFavorite_count(favAlbumsRepository.countFavAlbumsByAlbumid(list.get(i).findValue("mbid").asText()));
             albums.add(album);
         }
         if (albums.size() == 0){
@@ -75,7 +81,7 @@ public class AlbumService {
         album.setArtist(list.findValue("artist").asText());
         album.setUrl("https://www.last.fm/music/"+album.getArtist()+"/"+album.getName());
         album.setImage(images.get(3).findValue("#text").asText());
-
+        album.setFavorite_count(favAlbumsRepository.countFavAlbumsByAlbumid(mbid));
         return album;
     }
 }

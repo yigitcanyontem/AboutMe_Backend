@@ -6,6 +6,7 @@ public class Album {
     String artist;
     String image;
     String url;
+    Integer favorite_count;
 
     public String getMbid() {
         return mbid;
@@ -45,5 +46,25 @@ public class Album {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public Integer getFavorite_count() {
+        return favorite_count;
+    }
+
+    public void setFavorite_count(Integer favorite_count) {
+        this.favorite_count = favorite_count;
+    }
+
+    @Override
+    public String toString() {
+        return "Album{" +
+                "mbid='" + mbid + '\'' +
+                ", name='" + name + '\'' +
+                ", artist='" + artist + '\'' +
+                ", image='" + image + '\'' +
+                ", url='" + url + '\'' +
+                ", favorite_count=" + favorite_count +
+                '}';
     }
 }

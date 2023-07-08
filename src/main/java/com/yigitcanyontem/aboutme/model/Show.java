@@ -11,6 +11,17 @@ public class Show {
     String original_language;
     String imdb_url;
     Integer vote_count;
+    Integer favorite_count;
+
+    public Integer getFavorite_count() {
+        return favorite_count;
+    }
+
+
+
+    public void setFavorite_count(Integer favorite_count) {
+        this.favorite_count = favorite_count;
+    }
 
     public Integer getVote_count() {
         return vote_count;
@@ -93,5 +104,21 @@ public class Show {
 
     public void setOriginal_language(String original_language) {
         this.original_language = original_language;
+    }
+    @Override
+    public String toString() {
+        return "Show{" +
+                "id='" + id + '\'' +
+                ", adult=" + adult +
+                ", backdrop_path='" + backdrop_path + '\'' +
+                ", original_title='" + original_title + '\'' +
+                ", overview='" + overview + '\'' +
+                ", poster_path='" + poster_path + '\'' +
+                ", first_air_date='" + first_air_date + '\'' +
+                ", original_language='" + original_language + '\'' +
+                ", imdb_url='" + imdb_url + '\'' +
+                ", vote_count=" + vote_count +
+                ", favorite_count=" + favorite_count +
+                '}';
     }
 }

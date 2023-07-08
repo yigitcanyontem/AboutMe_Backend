@@ -4,7 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yigitcanyontem.aboutme.exceptions.SearchNotFoundException;
+import com.yigitcanyontem.aboutme.favmovies.FavMovieRepository;
 import com.yigitcanyontem.aboutme.model.Movie;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -18,6 +20,10 @@ import java.util.List;
 public class MovieService {
     @Value("${tmdb_api_key}")
     String tmdb_api_key;
+
+    @Autowired
+    private FavMovieRepository favMovieRepository;
+
 
     public Movie getSingleMovieById(Integer movieid) throws JsonProcessingException {
         String url = "https://api.themoviedb.org/3/movie/"+movieid+"?api_key="+ tmdb_api_key;
@@ -48,6 +54,7 @@ public class MovieService {
         movie.setLanguage(list.findValue("original_language").asText());
         movie.setImdb_url("https://www.imdb.com/title/"+list.findValue("imdb_id").asText());
         movie.setVote_count(list.findValue("vote_count").asInt());
+        movie.setFavorite_count(favMovieRepository.countFavMoviesByMovieid(movieid));
         return movie;
     }
     public List<Movie> getMovieSearchResults(String title) throws JsonProcessingException {
@@ -72,6 +79,7 @@ public class MovieService {
             movie.setLanguage(list.get(i).get("original_language").asText());
             movie.setImdb_url("");
             movie.setVote_count(list.get(i).get("vote_count").asInt());
+            movie.setFavorite_count(favMovieRepository.countFavMoviesByMovieid(list.get(i).get("id").asInt()));
             movies.add(movie);
         }
         movies.sort(Comparator.comparing(Movie::getVote_count).reversed());

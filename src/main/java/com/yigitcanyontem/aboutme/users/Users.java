@@ -5,7 +5,11 @@ import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+
 import java.sql.Date;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(
@@ -18,6 +22,10 @@ import java.sql.Date;
         @UniqueConstraint(
                 name = "user_username_unique",
                 columnNames = "username"
+        ),
+        @UniqueConstraint(
+                name = "profile_image_id_unique",
+                        columnNames = "profile_Image_Id"
         )
 })
 @NoArgsConstructor
@@ -74,16 +82,31 @@ public class Users {
     )
     private String username;
 
-    public Users(String firstName, String lastName, Date date_of_birth, Country country, String email, String username) {
+    @Column(
+            name = "password",
+            nullable = false
+    )
+    private String password;
+
+    @Column(
+            name = "profile_Image_Id",
+            unique = true
+    )
+    private String profileImageId;
+
+
+    public Users(String firstName, String lastName, Date date_of_birth, Country country, String email, String username, String password, String profileImageId) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.date_of_birth = date_of_birth;
         this.country = country;
         this.email = email;
         this.username = username;
+        this.password = password;
+        this.profileImageId = profileImageId;
     }
 
-    public Users(Integer id, String firstName, String lastName, Date date_of_birth, Country country, String email, String username) {
+    public Users(Integer id, String firstName, String lastName, Date date_of_birth, Country country, String email, String username, String password, String profileImageId) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -91,6 +114,20 @@ public class Users {
         this.country = country;
         this.email = email;
         this.username = username;
+        this.password = password;
+        this.profileImageId = profileImageId;
+    }
+
+    public String getProfileImageId() {
+        return profileImageId;
+    }
+
+    public void setProfileImageId(String profileImageId) {
+        this.profileImageId = profileImageId;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public Integer getId() {
@@ -141,6 +178,10 @@ public class Users {
         this.email = email;
     }
 
+    public String getPassword() {
+        return this.password;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -150,15 +191,15 @@ public class Users {
     }
 
     @Override
-    public String toString() {
-        return "Users{" +
-                "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", date_of_birth=" + date_of_birth +
-                ", country=" + country +
-                ", email='" + email + '\'' +
-                ", username='" + username + '\'' +
-                '}';
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Users users = (Users) o;
+        return Objects.equals(id, users.id) && Objects.equals(firstName, users.firstName) && Objects.equals(lastName, users.lastName) && Objects.equals(date_of_birth, users.date_of_birth) && Objects.equals(country, users.country) && Objects.equals(email, users.email) && Objects.equals(username, users.username) && Objects.equals(password, users.password) && Objects.equals(profileImageId, users.profileImageId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, firstName, lastName, date_of_birth, country, email, username, password, profileImageId);
     }
 }

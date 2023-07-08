@@ -4,7 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yigitcanyontem.aboutme.exceptions.SearchNotFoundException;
+import com.yigitcanyontem.aboutme.favshows.FavShowsRepository;
 import com.yigitcanyontem.aboutme.model.Show;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -18,6 +20,10 @@ import java.util.List;
 public class ShowService {
     @Value("${tmdb_api_key}")
     String tmdb_api_key;
+
+    @Autowired
+    private FavShowsRepository favShowsRepository;
+
     public Show getSingleShowById(Integer showid) throws JsonProcessingException {
         String url = "https://api.themoviedb.org/3/tv/"+showid+"?api_key="+ tmdb_api_key;
         RestTemplate restTemplate = new RestTemplate();
@@ -49,6 +55,7 @@ public class ShowService {
             show.setImdb_url("");
         }
         show.setVote_count(list.findValue("vote_count").asInt());
+        show.setFavorite_count(favShowsRepository.countFavShowsByShowid(showid));
         return show;
     }
     public List<Show> getShowSearchResults(String title) throws JsonProcessingException {
@@ -73,6 +80,7 @@ public class ShowService {
             show.setOriginal_language(list.get(i).get("original_language").asText());
             show.setImdb_url("");
             show.setVote_count(list.get(i).get("vote_count").asInt());
+            show.setFavorite_count(favShowsRepository.countFavShowsByShowid(list.get(i).get("id").asInt()));
             shows.add(show);
         }
         shows.sort(Comparator.comparing(Show::getVote_count).reversed());

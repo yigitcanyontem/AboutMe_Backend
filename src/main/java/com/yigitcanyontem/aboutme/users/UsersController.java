@@ -13,8 +13,6 @@ import com.yigitcanyontem.aboutme.favshows.FavShowsService;
 import com.yigitcanyontem.aboutme.model.*;
 import com.yigitcanyontem.aboutme.users.descriptions.Description;
 import com.yigitcanyontem.aboutme.users.descriptions.DescriptionService;
-import com.yigitcanyontem.aboutme.users.passwords.PasswordModel;
-import com.yigitcanyontem.aboutme.users.passwords.PasswordsService;
 import com.yigitcanyontem.aboutme.users.socialmedia.SocialMedia;
 import com.yigitcanyontem.aboutme.users.socialmedia.SocialMediaService;
 import org.springframework.stereotype.Controller;
@@ -29,7 +27,6 @@ import java.util.List;
 public class UsersController {
     private final UsersService usersService;
     private final DescriptionService descriptionService;
-    private final PasswordsService passwordsService;;
     private final SocialMediaService socialMediaService;
     private final FavBooksService favBooksService;
     private final FavShowsService favShowsService;
@@ -37,10 +34,9 @@ public class UsersController {
     private final FavMovieService favMovieService;
     private final MovieRestController movieRestController;
 
-    public UsersController(UsersService usersService, DescriptionService descriptionService, PasswordsService passwordsService, SocialMediaService socialMediaService, FavBooksService favBooksService, FavShowsService favShowsService, FavAlbumsService favAlbumsService, FavMovieService favMovieService, MovieRestController movieRestController) {
+    public UsersController(UsersService usersService, DescriptionService descriptionService, SocialMediaService socialMediaService, FavBooksService favBooksService, FavShowsService favShowsService, FavAlbumsService favAlbumsService, FavMovieService favMovieService, MovieRestController movieRestController) {
         this.usersService = usersService;
         this.descriptionService = descriptionService;
-        this.passwordsService = passwordsService;
         this.socialMediaService = socialMediaService;
         this.favBooksService = favBooksService;
         this.favShowsService = favShowsService;
@@ -50,7 +46,7 @@ public class UsersController {
     }
 
     @PostMapping("/create")
-    public String newCustomer(@RequestBody UserModel user){
+    public String newCustomer(@RequestBody UserRegisterModel user){
         usersService.newCustomer(user);
         return "Success";
     }
@@ -65,10 +61,6 @@ public class UsersController {
     @GetMapping("/description/{id}")
     public Description getCustomerDescription(@PathVariable Integer id){
         return descriptionService.description(id);
-    }
-    @PutMapping("/login")
-    public String getPassword(@RequestBody PasswordModel passwordModel) {
-        return passwordsService.logIn(passwordModel);
     }
     @PutMapping("/update")
     public String updateCustomer(@RequestBody AssignModel assignModel) {

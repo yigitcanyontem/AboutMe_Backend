@@ -11,6 +11,32 @@ public class Movie {
     String language;
     String imdb_url;
     Integer vote_count;
+    Integer favorite_count;
+
+    public Integer getFavorite_count() {
+        return favorite_count;
+    }
+
+    @Override
+    public String toString() {
+        return "Movie{" +
+                "id='" + id + '\'' +
+                ", adult=" + adult +
+                ", backdrop_path='" + backdrop_path + '\'' +
+                ", original_title='" + original_title + '\'' +
+                ", overview='" + overview + '\'' +
+                ", poster_path='" + poster_path + '\'' +
+                ", release_date='" + release_date + '\'' +
+                ", language='" + language + '\'' +
+                ", imdb_url='" + imdb_url + '\'' +
+                ", vote_count=" + vote_count +
+                ", favorite_count=" + favorite_count +
+                '}';
+    }
+
+    public void setFavorite_count(Integer favorite_count) {
+        this.favorite_count = favorite_count;
+    }
 
     public String getImdb_url() {
         return imdb_url;
@@ -94,17 +120,5 @@ public class Movie {
         this.language = language;
     }
 
-    @Override
-    public String toString() {
-        return "Movie{" +
-                "adult=" + adult +
-                ", backdrop_path='" + backdrop_path + '\'' +
-                ", original_title='" + original_title + '\'' +
-                ", overview='" + overview + '\'' +
-                ", poster_path='" + poster_path + '\'' +
-                ", release_date='" + release_date + '\'' +
-                ", language='" + language + '\'' +
-                '}';
-    }
 }
 

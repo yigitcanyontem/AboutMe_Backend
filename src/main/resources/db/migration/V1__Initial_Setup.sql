@@ -10,16 +10,22 @@ create table country (
 
 
 create table users (
-                              id BIGSERIAL primary key not null,
+                              id integer primary key not null,
                               date_of_birth date not null,
                               email character varying(255) not null,
                               first_name character varying(255) not null,
                               last_name character varying(255) not null,
+                              password character varying(255) not null,
+                              profile_image_id character varying(255),
                               username character varying(255) not null,
                               country integer not null,
-                              foreign key (country) references country (id)
+                              foreign key (country) references public.country (id)
                                   match simple on update no action on delete no action
 );
+
+
+
+
 
 create table description (
                                     usersid integer primary key not null,
@@ -58,13 +64,6 @@ create table favshows (
                                      match simple on update no action on delete no action
 );
 
-create table passwords (
-                                  id BIGSERIAL primary key not null,
-                                  password character varying(255) not null,
-                                  usersid integer not null,
-                                  foreign key (usersid) references users (id)
-                                      match simple on update no action on delete no action
-);
 
 create table socialmedia (
                                     id BIGSERIAL primary key not null,

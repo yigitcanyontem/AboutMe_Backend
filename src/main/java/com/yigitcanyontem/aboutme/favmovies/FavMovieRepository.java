@@ -12,6 +12,10 @@ public interface FavMovieRepository extends JpaRepository<FavMovie,Users> {
     List<FavMovie> findByUsersid(Users usersid);
     @Query("SELECT max(a.id) FROM FavMovie a")
     int maxId();
+    int countFavMoviesByUsersid(Users usersid);
+    boolean existsByUsersid(Users usersid);
+    int countFavMoviesByMovieid(Integer movieid);
+    boolean existsFavMovieByUsersidAndMovieid(Users usersid, Integer movieid);
     void deleteFavMovieByUsersid(Users usersid);
     void deleteFavMovieByUsersidAndMovieid(Users usersid, Integer movieid);
 }

@@ -2,7 +2,6 @@ package com.yigitcanyontem.aboutme.users;
 
 import com.yigitcanyontem.aboutme.country.CountryService;
 import com.yigitcanyontem.aboutme.exceptions.SearchNotFoundException;
-import com.yigitcanyontem.aboutme.users.passwords.Passwords;
 import com.yigitcanyontem.aboutme.users.socialmedia.SocialMedia;
 import com.yigitcanyontem.aboutme.favalbums.FavAlbumsService;
 import com.yigitcanyontem.aboutme.favbooks.FavBooksService;
@@ -10,7 +9,6 @@ import com.yigitcanyontem.aboutme.favmovies.FavMovieService;
 import com.yigitcanyontem.aboutme.favshows.FavShowsService;
 import com.yigitcanyontem.aboutme.model.AssignModel;
 import com.yigitcanyontem.aboutme.users.descriptions.DescriptionService;
-import com.yigitcanyontem.aboutme.users.passwords.PasswordsService;
 import com.yigitcanyontem.aboutme.users.socialmedia.SocialMediaService;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -26,12 +24,11 @@ public class UsersService {
     private final FavShowsService favShowsService;
     private final FavBooksService favBooksService;
     private final CountryService countryService;
-    private final PasswordsService passwordsService;
     private final SocialMediaService socialMediaService;
 
     public UsersService(UsersRepository usersRepository, DescriptionService descriptionService
             , FavMovieService favMovieService, FavAlbumsService favAlbumsService, FavShowsService favShowsService,
-                        FavBooksService favBooksService, CountryService countryService, PasswordsService passwordsService,
+                        FavBooksService favBooksService, CountryService countryService,
                         SocialMediaService socialMediaService) {
         this.usersRepository = usersRepository;
         this.descriptionService = descriptionService;
@@ -40,7 +37,6 @@ public class UsersService {
         this.favShowsService = favShowsService;
         this.favBooksService = favBooksService;
         this.countryService = countryService;
-        this.passwordsService = passwordsService;
         this.socialMediaService = socialMediaService;
     }
 
@@ -53,6 +49,10 @@ public class UsersService {
     }
     public Integer getUserByUsername(String username){
         return usersRepository.getUsersByUsername(username).getId();
+    }
+
+    public Users getUsersObjectByUsername(String username){
+        return usersRepository.getUsersByUsername(username);
     }
     public List<Users> usersList(String username){
         List<Users> list = usersRepository.findByUsernameContaining(username);
@@ -108,12 +108,11 @@ public class UsersService {
         favAlbumsService.deleteUserFavAlbums(users);
         favBooksService.deleteUserFavBooks(users);
         descriptionService.deleteUserDescription(usersid);
-        passwordsService.deletePasswordsByUsersid(users);
         usersRepository.deleteById(usersid);
         return "Success";
     }
 
-    public void newCustomer(UserModel user){
+    public void newCustomer(UserRegisterModel user){
         if (usersRepository.existsByUsername(user.getUsername())){
             throw new SearchNotFoundException("Username taken");
         }
@@ -121,18 +120,16 @@ public class UsersService {
             throw new SearchNotFoundException("Email taken");
         }
         Users users = new Users();
-        Passwords passwords = new Passwords();
         users.setFirstName(user.getFirstName());
         users.setLastName(user.getLastName());
         users.setDate_of_birth(user.getDate_of_birth());
         users.setCountry(countryService.singleCountry(user.getCountry()));
         users.setEmail(user.getEmail());
         users.setUsername(user.getUsername());
+        users.setPassword(user.getPassword());
+        users.setProfileImageId("");
         usersRepository.save(users);
         Users users1 = usersRepository.getUsersByUsername(user.getUsername());
-        passwords.setUsersid(users1);
-        passwords.setPassword(user.getPassword());
-        passwordsService.savePassword(passwords);
         socialMediaService.saveSocialMedia(new SocialMedia(users1,"","","",""));
     }
 }

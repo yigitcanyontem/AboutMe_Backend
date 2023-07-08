@@ -1,67 +1,28 @@
 package com.yigitcanyontem.aboutme.users;
 
-
 import java.sql.Date;
 import java.util.List;
 
-public class UserModel {
-    private Integer id;
+public class UserRegisterModel {
     private String firstName;
     private String lastName;
     private Date date_of_birth;
     private Integer country;
     private String email;
-    List<String> roles;
     private String username;
-    String profileImageId;
+    private String password;
 
-    public UserModel(Integer id, String firstName, String lastName, Date date_of_birth, Integer country, String email, List<String> roles, String username, String profileImageId) {
-        this.id = id;
+    public UserRegisterModel(String firstName, String lastName, Date date_of_birth, Integer country, String email, String username, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.date_of_birth = date_of_birth;
         this.country = country;
         this.email = email;
-        this.roles = roles;
         this.username = username;
-        this.profileImageId = profileImageId;
+        this.password = password;
     }
 
 
-    public UserModel(String firstName, String lastName, Date date_of_birth, Integer country, String email, List<String> roles, String username, String profileImageId) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.date_of_birth = date_of_birth;
-        this.country = country;
-        this.email = email;
-        this.roles = roles;
-        this.username = username;
-        this.profileImageId = profileImageId;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public List<String> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(List<String> roles) {
-        this.roles = roles;
-    }
-
-    public String getProfileImageId() {
-        return profileImageId;
-    }
-
-    public void setProfileImageId(String profileImageId) {
-        this.profileImageId = profileImageId;
-    }
 
     public String getFirstName() {
         return firstName;
@@ -109,5 +70,13 @@ public class UserModel {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

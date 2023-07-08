@@ -12,6 +12,10 @@ public interface FavBooksRepository extends JpaRepository<FavBooks,String> {
     List<FavBooks> findByUsersid(Users usersid);
     @Query("SELECT max(a.id) FROM FavBooks a")
     int maxId();
+    int countFavBooksByUsersid(Users usersid);
+    boolean existsFavBooksByUsersid(Users usersid);
+    int countFavBooksByBookid(String bookid);
+    boolean existsFavBooksByUsersidAndBookid(Users usersid, String bookid);
     void deleteFavBooksByUsersid(Users usersid);
     void deleteFavBooksByUsersidAndBookid(Users usersid, String bookid);
 

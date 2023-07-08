@@ -8,6 +8,15 @@ public class Book {
     Integer pageCount;
     String cover_url;
     String webReaderLink;
+    Integer favorite_count;
+
+    public Integer getFavorite_count() {
+        return favorite_count;
+    }
+
+    public void setFavorite_count(Integer favorite_count) {
+        this.favorite_count = favorite_count;
+    }
 
     public String getWebReaderLink() {
         return webReaderLink;
@@ -64,4 +73,19 @@ public class Book {
     public void setCover_url(String cover_url) {
         this.cover_url = cover_url;
     }
+
+    @Override
+    public String toString() {
+        return "Book{" +
+                "id='" + id + '\'' +
+                ", title='" + title + '\'' +
+                ", authors='" + authors + '\'' +
+                ", description='" + description + '\'' +
+                ", pageCount=" + pageCount +
+                ", cover_url='" + cover_url + '\'' +
+                ", webReaderLink='" + webReaderLink + '\'' +
+                ", favorite_count=" + favorite_count +
+                '}';
+    }
 }
+
