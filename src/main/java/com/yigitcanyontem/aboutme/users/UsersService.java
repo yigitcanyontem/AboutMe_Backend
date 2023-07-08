@@ -1,7 +1,9 @@
 package com.yigitcanyontem.aboutme.users;
 
 import com.yigitcanyontem.aboutme.country.CountryService;
+import com.yigitcanyontem.aboutme.exceptions.LoginException;
 import com.yigitcanyontem.aboutme.exceptions.SearchNotFoundException;
+import com.yigitcanyontem.aboutme.users.descriptions.Description;
 import com.yigitcanyontem.aboutme.users.socialmedia.SocialMedia;
 import com.yigitcanyontem.aboutme.favalbums.FavAlbumsService;
 import com.yigitcanyontem.aboutme.favbooks.FavBooksService;
@@ -40,11 +42,36 @@ public class UsersService {
         this.socialMediaService = socialMediaService;
     }
 
+    public String login(PasswordModel passwordModel){
+        Users users = getUsersObjectByUsername(passwordModel.getUsername());
+        if (passwordModel.getPassword().equals(users.getPassword())){
+            return String.valueOf(users.getId());
+        }else {
+            throw new LoginException("Email or Password Wrong");
+        }
+    }
+
     public Users getUser(Integer id){
         return usersRepository.findById(id).orElseThrow(
                 () -> new SearchNotFoundException(
                         "User with id " + id + " not found"
                 )
+        );
+    }
+    public UserDTO getUserModel(Integer id){
+        Users users = usersRepository.findById(id).orElseThrow(
+                () -> new SearchNotFoundException(
+                        "User with id " + id + " not found"
+                )
+        );
+        return new UserDTO(
+                users.getId(),
+                users.getFirstName(),
+                users.getLastName(),
+                users.getDate_of_birth(),
+                users.getCountry(),
+                users.getEmail(),
+                users.getUsername()
         );
     }
     public Integer getUserByUsername(String username){
@@ -127,9 +154,13 @@ public class UsersService {
         users.setEmail(user.getEmail());
         users.setUsername(user.getUsername());
         users.setPassword(user.getPassword());
-        users.setProfileImageId("");
         usersRepository.save(users);
         Users users1 = usersRepository.getUsersByUsername(user.getUsername());
         socialMediaService.saveSocialMedia(new SocialMedia(users1,"","","",""));
+        descriptionService.saveDescription(users1.getId(),"");
+        favAlbumsService.saveFavAlbums(users1,"bc5a0db2-a123-4a29-bb75-de01c52da293");
+        favBooksService.saveFavBooks(users1,"vrpPEAAAQBAJ");
+        favMovieService.saveFavMovie(users1,550);
+        favShowsService.saveFavShows(users1,100);
     }
 }

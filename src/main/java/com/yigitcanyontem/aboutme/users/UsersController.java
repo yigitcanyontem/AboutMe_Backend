@@ -15,11 +15,14 @@ import com.yigitcanyontem.aboutme.users.descriptions.Description;
 import com.yigitcanyontem.aboutme.users.descriptions.DescriptionService;
 import com.yigitcanyontem.aboutme.users.socialmedia.SocialMedia;
 import com.yigitcanyontem.aboutme.users.socialmedia.SocialMediaService;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("user")
@@ -44,13 +47,21 @@ public class UsersController {
         this.favMovieService = favMovieService;
         this.movieRestController = movieRestController;
     }
-
+    @PutMapping("/login")
+    public String getPassword(@RequestBody PasswordModel passwordModel) {
+        System.out.println(passwordModel.toString());
+        return usersService.login(passwordModel);
+    }
     @PostMapping("/create")
-    public String newCustomer(@RequestBody UserRegisterModel user){
+    public Integer newCustomer(@RequestBody UserRegisterModel user){
         usersService.newCustomer(user);
-        return "Success";
+        return usersService.getUserByUsername(user.getUsername());
     }
     @GetMapping("/{id}")
+    public UserDTO getUser(@PathVariable Integer id){
+        return usersService.getUserModel(id);
+    }
+
     public Users getCustomer(@PathVariable Integer id){
         return usersService.getUser(id);
     }

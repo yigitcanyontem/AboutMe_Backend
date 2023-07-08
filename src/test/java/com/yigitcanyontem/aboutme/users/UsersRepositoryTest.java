@@ -29,24 +29,23 @@ public class UsersRepositoryTest extends AbstractTestcontainer {
     void setUp() {
         Locale.setDefault(Locale.US);
     }
+    @Test
+    void getUsersByUsername() {
+      String username = "username";
+      Users users = new Users(
+              FAKER.name().firstName(),
+              FAKER.name().lastName(),
+              Date.valueOf("2015-03-30"),
+              countryRepository.findById(1).get(),
+              FAKER.internet().safeEmailAddress(),
+              "username",
+              "password");
+      underTest.save(users);
 
-    //@Test
-  ////  void getUsersByUsername() {
-  ////      String username = "username";
-  ////      Users users = new Users(
-  ////              FAKER.name().firstName(),
-  ////              FAKER.name().lastName(),
-  ////              Date.valueOf("2015-03-30"),
-  ////              countryRepository.findById(1).get(),
-  ////              FAKER.internet().safeEmailAddress(),
-  ////              "username",
-  ////              "password");
-  ////      underTest.save(users);
-////
-  ////      // When
-  ////      Users actual = underTest.getUsersByUsername(username);
-  ////      // Then
-  ////      assertThat(actual).isEqualTo(users);
-////
-  //  }
+      // When
+      Users actual = underTest.getUsersByUsername(username);
+      // Then
+      assertThat(actual).isEqualTo(users);
+
+    }
 }

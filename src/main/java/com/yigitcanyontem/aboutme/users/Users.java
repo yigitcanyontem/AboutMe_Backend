@@ -22,10 +22,6 @@ import java.util.Objects;
         @UniqueConstraint(
                 name = "user_username_unique",
                 columnNames = "username"
-        ),
-        @UniqueConstraint(
-                name = "profile_image_id_unique",
-                        columnNames = "profile_Image_Id"
         )
 })
 @NoArgsConstructor
@@ -88,14 +84,7 @@ public class Users {
     )
     private String password;
 
-    @Column(
-            name = "profile_Image_Id",
-            unique = true
-    )
-    private String profileImageId;
-
-
-    public Users(String firstName, String lastName, Date date_of_birth, Country country, String email, String username, String password, String profileImageId) {
+    public Users(String firstName, String lastName, Date date_of_birth, Country country, String email, String username, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.date_of_birth = date_of_birth;
@@ -103,10 +92,9 @@ public class Users {
         this.email = email;
         this.username = username;
         this.password = password;
-        this.profileImageId = profileImageId;
     }
 
-    public Users(Integer id, String firstName, String lastName, Date date_of_birth, Country country, String email, String username, String password, String profileImageId) {
+    public Users(Integer id, String firstName, String lastName, Date date_of_birth, Country country, String email, String username, String password) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -115,16 +103,8 @@ public class Users {
         this.email = email;
         this.username = username;
         this.password = password;
-        this.profileImageId = profileImageId;
     }
 
-    public String getProfileImageId() {
-        return profileImageId;
-    }
-
-    public void setProfileImageId(String profileImageId) {
-        this.profileImageId = profileImageId;
-    }
 
     public void setPassword(String password) {
         this.password = password;
@@ -195,11 +175,11 @@ public class Users {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Users users = (Users) o;
-        return Objects.equals(id, users.id) && Objects.equals(firstName, users.firstName) && Objects.equals(lastName, users.lastName) && Objects.equals(date_of_birth, users.date_of_birth) && Objects.equals(country, users.country) && Objects.equals(email, users.email) && Objects.equals(username, users.username) && Objects.equals(password, users.password) && Objects.equals(profileImageId, users.profileImageId);
+        return Objects.equals(id, users.id) && Objects.equals(firstName, users.firstName) && Objects.equals(lastName, users.lastName) && Objects.equals(date_of_birth, users.date_of_birth) && Objects.equals(country, users.country) && Objects.equals(email, users.email) && Objects.equals(username, users.username) && Objects.equals(password, users.password);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, date_of_birth, country, email, username, password, profileImageId);
+        return Objects.hash(id, firstName, lastName, date_of_birth, country, email, username, password);
     }
 }

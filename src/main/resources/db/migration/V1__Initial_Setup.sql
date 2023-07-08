@@ -16,7 +16,6 @@ create table users (
                               first_name character varying(255) not null,
                               last_name character varying(255) not null,
                               password character varying(255) not null,
-                              profile_image_id character varying(255),
                               username character varying(255) not null,
                               country integer not null,
                               foreign key (country) references public.country (id)
