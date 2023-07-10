@@ -153,6 +153,7 @@ public class UsersService {
         users.setCountry(countryService.singleCountry(user.getCountry()));
         users.setEmail(user.getEmail());
         users.setUsername(user.getUsername());
+
         users.setPassword(user.getPassword());
         usersRepository.save(users);
         Users users1 = usersRepository.getUsersByUsername(user.getUsername());

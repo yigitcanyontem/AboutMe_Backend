@@ -23,9 +23,6 @@ create table users (
 );
 
 
-
-
-
 create table description (
                                     usersid integer primary key not null,
                                     description character varying(255)
