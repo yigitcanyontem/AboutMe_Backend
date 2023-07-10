@@ -14,6 +14,7 @@ import com.yigitcanyontem.aboutme.model.*;
 import com.yigitcanyontem.aboutme.users.descriptions.Description;
 import com.yigitcanyontem.aboutme.users.descriptions.DescriptionService;
 import com.yigitcanyontem.aboutme.users.socialmedia.SocialMedia;
+import com.yigitcanyontem.aboutme.users.socialmedia.SocialMediaDTO;
 import com.yigitcanyontem.aboutme.users.socialmedia.SocialMediaService;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +27,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("user")
-@CrossOrigin("http://localhost:3000")
 public class UsersController {
     private final UsersService usersService;
     private final DescriptionService descriptionService;
@@ -47,11 +47,7 @@ public class UsersController {
         this.favMovieService = favMovieService;
         this.movieRestController = movieRestController;
     }
-    @PutMapping("/login")
-    public String getPassword(@RequestBody PasswordModel passwordModel) {
-        System.out.println(passwordModel.toString());
-        return usersService.login(passwordModel);
-    }
+
     @PostMapping("/create")
     public Integer newCustomer(@RequestBody UserRegisterModel user){
         usersService.newCustomer(user);
@@ -66,7 +62,7 @@ public class UsersController {
         return usersService.getUser(id);
     }
     @GetMapping("/socialmedia/{id}")
-    public SocialMedia getCustomerSocialMedia(@PathVariable Integer id){
+    public SocialMediaDTO getCustomerSocialMedia(@PathVariable Integer id){
         return socialMediaService.getSocialMedia(id);
     }
     @GetMapping("/description/{id}")

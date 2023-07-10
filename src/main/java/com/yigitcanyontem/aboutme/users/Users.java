@@ -1,10 +1,16 @@
 package com.yigitcanyontem.aboutme.users;
 
 import com.yigitcanyontem.aboutme.country.Country;
+import com.yigitcanyontem.aboutme.security.token.Token;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.sql.Date;
 import java.util.Collection;
@@ -25,7 +31,9 @@ import java.util.Objects;
         )
 })
 @NoArgsConstructor
-public class Users {
+@Builder
+@AllArgsConstructor
+public class Users implements UserDetails {
 
     @Id
     @SequenceGenerator(
@@ -84,30 +92,62 @@ public class Users {
     )
     private String password;
 
-    public Users(String firstName, String lastName, Date date_of_birth, Country country, String email, String username, String password) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.date_of_birth = date_of_birth;
-        this.country = country;
-        this.email = email;
-        this.username = username;
-        this.password = password;
+    @Column(
+            name = "role",
+            nullable = false
+    )
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    @OneToMany(mappedBy = "user")
+    private List<Token> tokens;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return role.getAuthorities();
     }
 
-    public Users(Integer id, String firstName, String lastName, Date date_of_birth, Country country, String email, String username, String password) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.date_of_birth = date_of_birth;
-        this.country = country;
-        this.email = email;
-        this.username = username;
-        this.password = password;
+    @Override
+    public String getPassword() {
+        return password;
     }
 
+    @Override
+    public String getUsername() {
+        return username;
+    }
 
-    public void setPassword(String password) {
-        this.password = password;
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Users users = (Users) o;
+        return Objects.equals(id, users.id) && Objects.equals(firstName, users.firstName) && Objects.equals(lastName, users.lastName) && Objects.equals(date_of_birth, users.date_of_birth) && Objects.equals(country, users.country) && Objects.equals(email, users.email) && Objects.equals(username, users.username) && Objects.equals(password, users.password) && role == users.role && Objects.equals(tokens, users.tokens);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, firstName, lastName, date_of_birth, country, email, username, password, role, tokens);
     }
 
     public Integer getId() {
@@ -158,28 +198,29 @@ public class Users {
         this.email = email;
     }
 
-    public String getPassword() {
-        return this.password;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
     public void setUsername(String username) {
         this.username = username;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Users users = (Users) o;
-        return Objects.equals(id, users.id) && Objects.equals(firstName, users.firstName) && Objects.equals(lastName, users.lastName) && Objects.equals(date_of_birth, users.date_of_birth) && Objects.equals(country, users.country) && Objects.equals(email, users.email) && Objects.equals(username, users.username) && Objects.equals(password, users.password);
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, firstName, lastName, date_of_birth, country, email, username, password);
+    public Role getRole() {
+        return role;
     }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public List<Token> getTokens() {
+        return tokens;
+    }
+
+    public void setTokens(List<Token> tokens) {
+        this.tokens = tokens;
+    }
+
+
 }

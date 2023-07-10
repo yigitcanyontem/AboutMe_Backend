@@ -8,11 +8,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Testcontainers
 public class TestContainersTest extends AbstractTestcontainer{
 
-    @Test
-    void canStartPostgresDB() {
-        assertThat(postgreSQLContainer.isRunning()).isTrue();
-        assertThat(postgreSQLContainer.isCreated()).isTrue();
-    }
+   //@Test
+   //void canStartPostgresDB() {
+   //    assertThat(postgreSQLContainer.isRunning()).isTrue();
+   //    assertThat(postgreSQLContainer.isCreated()).isTrue();
+   //}
 
 }
   

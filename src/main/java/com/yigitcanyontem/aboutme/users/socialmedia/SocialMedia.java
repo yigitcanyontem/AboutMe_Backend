@@ -26,7 +26,6 @@ public class SocialMedia {
             generator = "socialmedia_id_seq"
     )
     private Integer id;
-
     @OneToOne()
     @JoinColumn(
             name = "usersid",

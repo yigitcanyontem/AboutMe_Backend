@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 @RestController
-@CrossOrigin("http://localhost:3000")
 public class MovieRestController {
     private final UsersService usersService;
     private final ShowService showService;

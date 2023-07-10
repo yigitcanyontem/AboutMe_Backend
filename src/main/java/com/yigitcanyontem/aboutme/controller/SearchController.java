@@ -18,7 +18,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("search")
-@CrossOrigin("http://localhost:3000")
 public class SearchController {
     private final UsersService usersService;
     private final ShowService showService;
