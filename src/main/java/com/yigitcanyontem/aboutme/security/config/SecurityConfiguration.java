@@ -3,6 +3,7 @@ package com.yigitcanyontem.aboutme.security.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,10 +15,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import static com.yigitcanyontem.aboutme.users.Permission.*;
 import static com.yigitcanyontem.aboutme.users.Role.*;
-import static org.springframework.http.HttpMethod.*;
+import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.http.HttpMethod.PUT;
 
 @Configuration
 @EnableWebSecurity
@@ -38,7 +40,21 @@ public class SecurityConfiguration {
                     CorsConfiguration config = new CorsConfiguration();
                     config.addAllowedOrigin("http://localhost:3000");
                     config.addAllowedMethod("GET");
+                    config.addAllowedMethod("POST");
+                    config.addAllowedMethod("PUT");
+                    config.addAllowedMethod("DELETE");
                     config.addAllowedHeader("Authorization");
+                    config.addAllowedHeader("Content-Type");
+                    config.addAllowedHeader("Authorization");
+
+                    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+                    source.registerCorsConfiguration("/api/v1/auth/authenticate", config);
+
+                    UrlBasedCorsConfigurationSource source1 = new UrlBasedCorsConfigurationSource();
+                    source1.registerCorsConfiguration("/api/v1/auth/register", config);
+
+                    UrlBasedCorsConfigurationSource source2 = new UrlBasedCorsConfigurationSource();
+                    source2.registerCorsConfiguration("/api/v1/auth/refresh-token", config);
 
                     cors.configurationSource(request -> config);
         })
@@ -46,9 +62,11 @@ public class SecurityConfiguration {
         .requestMatchers(
                 "/api/v1/auth/**"
         )
-          .permitAll()
-
-
+         .permitAll()
+        .requestMatchers(
+                HttpMethod.GET,
+                "/countries"
+        ).permitAll()
         .requestMatchers("/movie/**").hasAnyRole(ADMIN.name(), MANAGER.name())
         .requestMatchers("/user/**").hasAnyRole(ADMIN.name(), MANAGER.name())
         .requestMatchers("/book/**").hasAnyRole(ADMIN.name(), MANAGER.name())
@@ -72,4 +90,5 @@ public class SecurityConfiguration {
 
     return http.build();
   }
+
 }

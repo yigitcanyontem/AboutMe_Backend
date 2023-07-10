@@ -22,7 +22,6 @@ public class SocialMediaService {
     }
     public SocialMediaDTO getSocialMedia(Integer id) {
         SocialMedia socialMedia = socialMediaRepository.findSocialMediaByUsersid(id);
-        System.out.println(socialMedia);
         return new SocialMediaDTO(
                 socialMedia.getUsersid().getId(),
                 socialMedia.getInstagram(),

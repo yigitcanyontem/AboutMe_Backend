@@ -42,15 +42,6 @@ public class UsersService {
         this.socialMediaService = socialMediaService;
     }
 
-    public String login(PasswordModel passwordModel){
-        Users users = getUsersObjectByUsername(passwordModel.getUsername());
-        if (passwordModel.getPassword().equals(users.getPassword())){
-            return String.valueOf(users.getId());
-        }else {
-            throw new LoginException("Email or Password Wrong");
-        }
-    }
-
     public Users getUser(Integer id){
         return usersRepository.findById(id).orElseThrow(
                 () -> new SearchNotFoundException(
