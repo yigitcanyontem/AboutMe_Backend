@@ -11,7 +11,6 @@ import com.yigitcanyontem.aboutme.service.MovieService;
 import com.yigitcanyontem.aboutme.service.ShowService;
 import com.yigitcanyontem.aboutme.users.Users;
 import com.yigitcanyontem.aboutme.users.UsersService;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

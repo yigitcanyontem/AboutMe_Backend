@@ -4,7 +4,6 @@ package com.yigitcanyontem.aboutme.users;
 import com.yigitcanyontem.aboutme.country.Country;
 
 import java.sql.Date;
-import java.util.List;
 
 public class UserDTO {
     private Integer id;

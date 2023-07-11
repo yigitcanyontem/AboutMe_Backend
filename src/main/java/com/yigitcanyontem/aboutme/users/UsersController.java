@@ -13,15 +13,11 @@ import com.yigitcanyontem.aboutme.favshows.FavShowsService;
 import com.yigitcanyontem.aboutme.model.*;
 import com.yigitcanyontem.aboutme.users.descriptions.Description;
 import com.yigitcanyontem.aboutme.users.descriptions.DescriptionService;
-import com.yigitcanyontem.aboutme.users.socialmedia.SocialMedia;
 import com.yigitcanyontem.aboutme.users.socialmedia.SocialMediaDTO;
 import com.yigitcanyontem.aboutme.users.socialmedia.SocialMediaService;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.ArrayList;
 import java.util.List;
-
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 

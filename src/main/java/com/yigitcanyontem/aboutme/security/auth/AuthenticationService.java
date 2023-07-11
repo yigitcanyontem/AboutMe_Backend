@@ -2,7 +2,6 @@ package com.yigitcanyontem.aboutme.security.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yigitcanyontem.aboutme.country.CountryService;
-import com.yigitcanyontem.aboutme.exceptions.SearchNotFoundException;
 import com.yigitcanyontem.aboutme.favalbums.FavAlbumsService;
 import com.yigitcanyontem.aboutme.favbooks.FavBooksService;
 import com.yigitcanyontem.aboutme.favmovies.FavMovieService;

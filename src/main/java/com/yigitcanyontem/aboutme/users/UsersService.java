@@ -1,9 +1,7 @@
 package com.yigitcanyontem.aboutme.users;
 
 import com.yigitcanyontem.aboutme.country.CountryService;
-import com.yigitcanyontem.aboutme.exceptions.LoginException;
 import com.yigitcanyontem.aboutme.exceptions.SearchNotFoundException;
-import com.yigitcanyontem.aboutme.users.descriptions.Description;
 import com.yigitcanyontem.aboutme.users.socialmedia.SocialMedia;
 import com.yigitcanyontem.aboutme.favalbums.FavAlbumsService;
 import com.yigitcanyontem.aboutme.favbooks.FavBooksService;

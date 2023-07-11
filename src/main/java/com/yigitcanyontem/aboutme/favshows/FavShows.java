@@ -2,10 +2,7 @@ package com.yigitcanyontem.aboutme.favshows;
 
 import com.yigitcanyontem.aboutme.users.Users;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 

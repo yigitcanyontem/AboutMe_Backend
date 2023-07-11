@@ -1,7 +1,6 @@
 package com.yigitcanyontem.aboutme.users;
 
 import java.sql.Date;
-import java.util.List;
 
 public class UserRegisterModel {
     private String firstName;

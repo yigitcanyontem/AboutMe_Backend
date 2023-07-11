@@ -1,6 +1,5 @@
 package com.yigitcanyontem.aboutme.users.socialmedia;
 
-import com.yigitcanyontem.aboutme.users.Users;
 
 public class SocialMediaDTO {
     private Integer usersid;
