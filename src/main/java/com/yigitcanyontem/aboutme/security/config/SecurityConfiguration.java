@@ -40,6 +40,7 @@ public class SecurityConfiguration {
                     config.addAllowedMethod("POST");
                     config.addAllowedMethod("PUT");
                     config.addAllowedMethod("DELETE");
+                    config.addAllowedMethod("PATCH");
                     config.addAllowedHeader("Authorization");
                     config.addAllowedHeader("Content-Type");
                     config.addAllowedHeader("Authorization");

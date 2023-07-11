@@ -20,7 +20,12 @@ public class SocialMediaService {
             return 0;
         }
     }
-    public SocialMediaDTO getSocialMedia(Integer id) {
+    public SocialMedia getSocialMedia(Integer id) {
+        return socialMediaRepository.findSocialMediaByUsersid(id);
+
+    }
+
+    public SocialMediaDTO getSocialMediaDTO(Integer id) {
         SocialMedia socialMedia = socialMediaRepository.findSocialMediaByUsersid(id);
         return new SocialMediaDTO(
                 socialMedia.getUsersid().getId(),

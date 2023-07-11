@@ -92,21 +92,20 @@ public class UsersService {
         String pinterestuser = assignModel.getPinterestuser();
         String linkedinuser = assignModel.getPinterestuser();
         String twitteruser = assignModel.getTwitteruser();
-        SocialMedia socialMedia = socialMediaService.getSocialMediaRef(getUser(id));
-        socialMediaService.deleteSocialMedia(getUser(id));
-        if (!Objects.equals(description, "")){
+        SocialMedia socialMedia = socialMediaService.getSocialMedia(id);
+        if (!Objects.equals(assignModel.getDescription(), "")){
             descriptionService.saveDescription(id,description);
         }
-        if (!Objects.equals(instagramuser, "")){
+        if (!Objects.equals(instagramuser, "") && instagramuser != null){
             socialMedia.setInstagram(instagramuser);
         }
-        if (!Objects.equals(pinterestuser, "")){
+        if (!Objects.equals(pinterestuser, "") && pinterestuser != null){
             socialMedia.setPinterest(pinterestuser);
         }
-        if (!Objects.equals(linkedinuser, "")){
+        if (!Objects.equals(linkedinuser, "") && linkedinuser != null){
             socialMedia.setLinkedin(linkedinuser);
         }
-        if (!Objects.equals(twitteruser, "")){
+        if (!Objects.equals(twitteruser, "") && twitteruser != null){
             socialMedia.setTwitter(twitteruser);
         }
         socialMediaService.saveSocialMedia(socialMedia);

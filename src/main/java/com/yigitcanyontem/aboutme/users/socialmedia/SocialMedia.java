@@ -8,7 +8,14 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
-@Table(name = "socialmedia")
+@Table(
+        name = "socialmedia",
+        uniqueConstraints = {
+        @UniqueConstraint(
+        name = "user_usersid_unique",
+        columnNames = "usersid")
+        }
+)
 @NoArgsConstructor
 public class SocialMedia {
     @Id

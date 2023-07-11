@@ -59,13 +59,13 @@ public class UsersController {
     }
     @GetMapping("/socialmedia/{id}")
     public SocialMediaDTO getCustomerSocialMedia(@PathVariable Integer id){
-        return socialMediaService.getSocialMedia(id);
+        return socialMediaService.getSocialMediaDTO(id);
     }
     @GetMapping("/description/{id}")
     public Description getCustomerDescription(@PathVariable Integer id){
         return descriptionService.description(id);
     }
-    @PutMapping("/update")
+    @PatchMapping("/update")
     public String updateCustomer(@RequestBody AssignModel assignModel) {
         return usersService.updateCustomer(assignModel);
     }
