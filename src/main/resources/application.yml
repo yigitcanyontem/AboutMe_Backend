@@ -1,3 +1,6 @@
+tmdb_api_key: b8e7bf8d2c2bcacdbaec1841739fe986
+last_fm_api_key: 00d7353eca18e57c617ac728cf3cee06
+last_fm_url: https://ws.audioscrobbler.com/2.0/?method=album.
 
 app:
   client:
@@ -6,9 +9,24 @@ app:
 
 server:
   port: 8080
+  tomcat:
+    max-swallow-size: -1
+    max-http-form-post-size: -1
   error:
     include-message: always
 
+application:
+  security:
+    jwt:
+      secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+      expiration: 86400000 # a day
+      refresh-token:
+        expiration: 604800000 # 7 days
+cors:
+  allowed-origins: "*"
+  allowed-methods: "*"
+  allowed-headers: "*"
+  exposed-headers: "*"
 
 spring:
   flyway:
@@ -27,3 +45,7 @@ spring:
     show-sql: false
   main:
     web-application-type: servlet
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB

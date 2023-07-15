@@ -15,11 +15,19 @@ import com.yigitcanyontem.aboutme.users.descriptions.Description;
 import com.yigitcanyontem.aboutme.users.descriptions.DescriptionService;
 import com.yigitcanyontem.aboutme.users.socialmedia.SocialMediaDTO;
 import com.yigitcanyontem.aboutme.users.socialmedia.SocialMediaService;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("user")
@@ -44,11 +52,6 @@ public class UsersController {
         this.movieRestController = movieRestController;
     }
 
-    @PostMapping("/create")
-    public Integer newCustomer(@RequestBody UserRegisterModel user){
-        usersService.newCustomer(user);
-        return usersService.getUserByUsername(user.getUsername());
-    }
     @GetMapping("/{id}")
     public UserDTO getUser(@PathVariable Integer id){
         return usersService.getUserModel(id);
@@ -148,5 +151,14 @@ public class UsersController {
     public String deleteFavBooks(@PathVariable Integer usersid,@PathVariable String bookid)  {
         favBooksService.deleteUserFavBooksById(getCustomer(usersid),bookid);
         return "Success";
+    }
+
+    @PostMapping("/upload/{id}")
+    public String uploadImage(@RequestParam("file") MultipartFile file, @PathVariable Integer id) {
+        return usersService.uploadPicture(file, id);
+    }
+    @GetMapping("/images/{id}")
+    public ResponseEntity<Resource> getImage(@PathVariable String id) {
+        return usersService.getImage(id);
     }
 }

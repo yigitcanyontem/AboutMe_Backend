@@ -11,7 +11,19 @@ import com.yigitcanyontem.aboutme.model.AssignModel;
 import com.yigitcanyontem.aboutme.users.descriptions.DescriptionService;
 import com.yigitcanyontem.aboutme.users.socialmedia.SocialMediaService;
 import jakarta.transaction.Transactional;
+import org.apache.commons.io.FileUtils;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
@@ -150,5 +162,43 @@ public class UsersService {
         favBooksService.saveFavBooks(users1,"vrpPEAAAQBAJ");
         favMovieService.saveFavMovie(users1,550);
         favShowsService.saveFavShows(users1,100);
+    }
+
+    public String uploadPicture(MultipartFile file, Integer id){
+        if (file.isEmpty()) {
+            return "No file selected";
+        }
+        try {
+            byte[] bytes = file.getBytes();
+
+            String filePath = "photos/" + id+".jpg";
+            File serverFile = new File(filePath);
+
+            FileUtils.writeByteArrayToFile(serverFile, bytes);
+
+            return "File uploaded successfully";
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "Error uploading file";
+        }
+    }
+
+    public ResponseEntity<Resource> getImage(String imageName) {
+        String imagePath = "photos/" + imageName + ".jpg";
+        File imageFile = new File(imagePath);
+        Resource resource = new FileSystemResource(imageFile);
+
+        if (resource.exists()) {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.IMAGE_JPEG);
+            return ResponseEntity.ok().headers(headers).body(resource);
+        } else {
+             imagePath = "photos/default.jpg";
+             imageFile = new File(imagePath);
+             resource = new FileSystemResource(imageFile);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.IMAGE_JPEG);
+            return ResponseEntity.ok().headers(headers).body(resource);
+        }
     }
 }

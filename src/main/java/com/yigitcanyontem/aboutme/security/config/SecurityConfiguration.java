@@ -65,7 +65,7 @@ public class SecurityConfiguration {
                 "/user/favbooks/**"
 
         )
-         .permitAll()
+        .permitAll()
         .requestMatchers(
                 HttpMethod.GET,
                 "/countries"

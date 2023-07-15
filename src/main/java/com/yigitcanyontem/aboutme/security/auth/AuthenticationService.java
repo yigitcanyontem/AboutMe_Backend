@@ -10,6 +10,7 @@ import com.yigitcanyontem.aboutme.security.config.JwtService;
 import com.yigitcanyontem.aboutme.security.token.Token;
 import com.yigitcanyontem.aboutme.security.token.TokenRepository;
 import com.yigitcanyontem.aboutme.security.token.TokenType;
+import com.yigitcanyontem.aboutme.users.Role;
 import com.yigitcanyontem.aboutme.users.Users;
 import com.yigitcanyontem.aboutme.users.UsersRepository;
 import com.yigitcanyontem.aboutme.users.descriptions.DescriptionService;
@@ -52,7 +53,7 @@ public class AuthenticationService {
         .email(request.getEmail())
         .username(request.getUsername())
         .password(passwordEncoder.encode(request.getPassword()))
-        .role(request.getRole())
+        .role(Role.MANAGER)
         .build();
     var savedUser = repository.save(user);
     var jwtToken = jwtService.generateToken(user);
