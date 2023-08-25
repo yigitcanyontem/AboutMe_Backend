@@ -1,6 +1,3 @@
-tmdb_api_key: b8e7bf8d2c2bcacdbaec1841739fe986
-last_fm_api_key: 00d7353eca18e57c617ac728cf3cee06
-last_fm_url: https://ws.audioscrobbler.com/2.0/?method=album.
 
 app:
   client:
